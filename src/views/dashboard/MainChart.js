@@ -32,7 +32,7 @@ const MainChart = () => {
     <>
       <CChartLine
         ref={chartRef}
-        style={{ height: '300px', marginTop: '40px' }}
+        style={{ height: '200px', marginTop: '40px' }}
         data={{
           labels: ['Malang', 'Surabaya', 'Jakarta', 'Bandung', 'Bali', 'Jayapura', 'Solo'],
           datasets: [

@@ -90,6 +90,7 @@ const Dashboard = () => {
   return (
     <>
       <WidgetsDropdown className="mb-4" />
+      
       <CRow>
         <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
@@ -137,277 +138,189 @@ const Dashboard = () => {
             </div>
           }
         />
+       
         <br/>
-        <CWidgetStatsA
-         title={<span style={{ fontWeight: 'bold', fontSize: '18px', color: '#000' }}>Target Total Revenue</span>}
-          chart={
-            <div style={{ paddingBottom: '20px' }}> {/* Added padding at the bottom */}
-            <CChartDoughnut 
-            data={{
-              labels: ['North Central Java', 'South Central Java'],
-              datasets: [{
-                data: [90.77, 9.23],
-                backgroundColor: ['#FFCE56', '#E7E9ED'],
-              }]
-            }} 
-            options={{ maintainAspectRatio: false, cutout: '80%' }} 
-          />
+       
+
+      <CCard className="mb-4">
+        <CCardBody>
+          <div style={{ display: 'flex', alignItems: 'center', padding:'10px 0px 0px 0px' }}>
+            <div style={{ width: '60%', height: '60%' }}>
+              <CChartDoughnut 
+                data={{
+                  labels: [], // Empty array to remove labels
+                  datasets: [{
+                    data: [90.77, 9.23],
+                    backgroundColor: ['#FFCE56', '#E7E9ED'],
+                  }]
+                }} 
+                options={{ 
+                  maintainAspectRatio: false, 
+                  cutout: '80%',  // Makes the center hollow
+                  plugins: {
+                    legend: { display: false },  // Hides the legend
+                    tooltip: { enabled: false }  // Disables tooltips if unwanted
+                  }
+                }} 
+              />
+                    <div style={{
+                position: 'relative', 
+                top: '-85px', 
+                textAlign: 'center', 
+                fontWeight: 'bold', 
+                fontSize: '15px'
+              }}>
+                90.77%
+              </div>
             </div>
-          }
-        />
+            <div style={{ paddingLeft: '20px', fontSize:'12px' }}>
+              <h6>Quro</h6>
+              <p>29,726<br/>Month To Date</p>
+
+            </div>
+
+          </div>
+        </CCardBody>
+      </CCard>
+        <br/>
+       
+        
+      <CCard className="mb-5">
+        <CCardBody>
+          <div style={{ display: 'flex', alignItems: 'center', padding:'10px 0px 0px 0px' }}>
+            <div style={{ width: '60%', height: '100%' }}>
+              <CChartDoughnut 
+                data={{
+                  labels: [], // Empty array to remove labels
+                  datasets: [{
+                    data: [90.77, 9.23],
+                    backgroundColor: ['#FFCE56', '#E7E9ED'],
+                  }]
+                }} 
+                options={{ 
+                  maintainAspectRatio: false, 
+                  cutout: '80%',  // Makes the center hollow
+                  plugins: {
+                    legend: { display: false },  // Hides the legend
+                    tooltip: { enabled: false }  // Disables tooltips if unwanted
+                  }
+                }} 
+              />
+                    <div style={{
+                position: 'relative', 
+                top: '-85px', 
+                textAlign: 'center', 
+                fontWeight: 'bold', 
+                fontSize: '15px'
+              }}>
+                90.77%
+              </div>
+            </div>
+            <div style={{ paddingLeft: '20px', fontSize:'12px' }}>
+              <h6>QSSO</h6>
+              <p>5,862</p>
+              <p>Month To Date</p>
+            </div>
+
+          </div>
+        </CCardBody>
+      
+      </CCard>
        
 
       </CCol>
-      <CCol sm={6} xl={4} xxl={3}>
-
-      <CCard className="mb-4">
-        <CCardBody>
-          <div style={{ display: 'flex', alignItems: 'center', padding:'10px 0px 0px 0px' }}>
-            <div style={{ width: '60%', height: '60%' }}>
-              <CChartDoughnut 
-                data={{
-                  labels: [], // Empty array to remove labels
-                  datasets: [{
-                    data: [90.77, 9.23],
-                    backgroundColor: ['#FFCE56', '#E7E9ED'],
-                  }]
-                }} 
-                options={{ 
-                  maintainAspectRatio: false, 
-                  cutout: '80%',  // Makes the center hollow
-                  plugins: {
-                    legend: { display: false },  // Hides the legend
-                    tooltip: { enabled: false }  // Disables tooltips if unwanted
-                  }
-                }} 
+      <CCol sm={9} xl={7} xxl={5}>
+          <CWidgetStatsA
+                title={<span style={{ fontWeight: 'bold', fontSize: '18px', color: '#000' }}>Revenue</span>}
+                chart={
+                  <div style={{ margin: '0px 20px 20px 20px' }}> {/* Added width: 100% */}
+                    <CChartBar
+                      data={{
+                        labels: ['Data', 'Mobo', 'Organic', 'Mobo Trade', 'Mobo Non-trade', 'Vas'],
+                        datasets: [
+                          {
+                            label: 'Dataset Example',
+                            data: [1964.90, 1945.09, 85.000, 30.000, 20.000, 20.000],
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                          },
+                        ],
+                      }}
+                      options={{
+                        indexAxis: 'y',
+                        responsive: true,
+                        plugins: {
+                          legend: { display: false },
+                        },
+                        scales: {
+                          x: {
+                            grid: { display: false },
+                            beginAtZero: true, 
+                          },
+                          y: {
+                            grid: { display: false }, 
+                            ticks: { display: true },
+                          },
+                        },
+                      }}
+                    />
+                  </div>
+                }
               />
-                    <div style={{
-                position: 'relative', 
-                top: '-83px', 
-                textAlign: 'center', 
-                fontWeight: 'bold', 
-                fontSize: '18px'
-              }}>
-                90.77%
+              <br/>
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div style={{ width: '100%' }}>
+                        <CCard className="mb-4">
+                          <CCardBody>
+                            <CRow>
+                              <CCol >
+                                <h4 id="traffic" className="card-title mb-0">
+                                  Revenue By Branch
+                                </h4>   
+                              </CCol>
+                            </CRow> 
+                            <MainChart />
+                          </CCardBody>
+                          <CCardFooter>
+                            <CRow
+                            sm={8} xl={6} xxl={4}
+                              className="mb-8 text-center justify-content-center align-items-center"
+                            >
+                              {progressExample.map((item, index, items) => (
+                                <CCol
+                                  className={classNames({
+                                    'd-none d-xl-block': index + 1 === items.length, 
+                                  })}
+                                  key={index}
+                                >
+                                  <div style={{ fontSize: '18px' }} className="text-body-secondary">{item.title}</div>
+                                  <div  style={{ fontSize: '16px' }} className="fw-semibold text-truncate">
+                                    {item.value} ({item.percent}%)
+                                  </div>
+                                  <div style={{ fontSize: '18px' }} className="text-body-secondary">{item.city}</div>
+                                  {/* <CProgress thin className="mt-2" color={item.color} value={item.percent} /> */}
+                                </CCol>
+                              ))}
+                            </CRow>
+                          </CCardFooter>
+                        </CCard>
+                      </div>
               </div>
-            </div>
-            <div style={{ paddingLeft: '10px' }}>
-              <h6>Daily Uro</h6>
-              <p>-9.72%</p>
-              <p>Month To Date</p>
-            </div>
-
-          </div>
-        </CCardBody>
-      </CCard>
-        
-      <CCard className="mb-4">
-        <CCardBody>
-          <div style={{ display: 'flex', alignItems: 'center', padding:'10px 0px 0px 0px' }}>
-            <div style={{ width: '60%', height: '60%' }}>
-              <CChartDoughnut 
-                data={{
-                  labels: [], // Empty array to remove labels
-                  datasets: [{
-                    data: [90.77, 9.23],
-                    backgroundColor: ['#FFCE56', '#E7E9ED'],
-                  }]
-                }} 
-                options={{ 
-                  maintainAspectRatio: false, 
-                  cutout: '80%',  // Makes the center hollow
-                  plugins: {
-                    legend: { display: false },  // Hides the legend
-                    tooltip: { enabled: false }  // Disables tooltips if unwanted
-                  }
-                }} 
-              />
-                    <div style={{
-                position: 'relative', 
-                top: '-83px', 
-                textAlign: 'center', 
-                fontWeight: 'bold', 
-                fontSize: '18px'
-              }}>
-                90.77%
-              </div>
-            </div>
-            <div style={{ paddingLeft: '10px' }}>
-              <h6>Daily Uro</h6>
-              <p>-9.72%</p>
-              <p>Month To Date</p>
-            </div>
-
-          </div>
-        </CCardBody>
-      </CCard>
-        </CCol>
-      <CCol sm={9} xl={7} xxl={6}>
+      </CCol>
       
-     
-      <CWidgetStatsA
-         title={<span style={{ fontWeight: 'bold', fontSize: '18px', color: '#000'}}>Revenue</span>}
-          chart={
-            <div style={{ margin: '0px 20px 20px 20px' }}> {/* Added padding at the bottom */}
-            <CChartBar
-                data={{
-                  labels: ['Data', 'Mobo', 'Organic', 'Mobo Trade', 'Mobo Non-trade', 'Vas'],
-                  datasets: [
-                    {
-                      label: 'Dataset Example',
-                      data: [1964.90, 1945.09, 85.000, 30.000, 20.000,  20.000],
-                      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                      borderColor: 'rgba(75, 192, 192, 1)',
-                      
-                    },
-                  ],
-                }}
-                options={{
-                  indexAxis: 'y', // membuat bar menjadi horizontal
-                  responsive: true,
-                  plugins: {
-                    legend: { display: false },
-                  },
-                  scales: {
-                    x: {
-                      grid: { display: false },
-                      beginAtZero: true, // Mulai dari 0 di sumbu x
-                    },
-                    y: {
-                      grid: { display: false }, // Grid di sumbu y tetap tidak tampil
-                      ticks: { display: true }, // Pastikan label di sumbu y tampil
-                    },
-                  },
-                }}
-              />
-            </div>
-          }
-        />
-         
-        </CCol>
-
-    </CRow>
- 
-    <br/>
-      <CCard className="mb-4">
-        <CCardBody>
-          <CRow>
-            <CCol sm={5}>
-              <h4 id="traffic" className="card-title mb-0">
-                Revenue By Branch
-              </h4>
-             
-            </CCol>
-          </CRow>
-          <MainChart />
-        </CCardBody>
-        <CCardFooter>
-          <CRow
-            xs={{ cols: 1, gutter: 4 }}
-            sm={{ cols: 2 }}
-            lg={{ cols: 4 }}
-            xl={{ cols: 5 }}
-             className="mb-2 text-center justify-content-center align-items-center"
-          >
-            {progressExample.map((item, index, items) => (
-              <CCol
-                className={classNames({
-                  'd-none d-xl-block': index + 1 === items.length,
-                })}
-                key={index}
-              >
-                <div className="text-body-secondary">{item.title}</div>
-                <div className="fw-semibold text-truncate">
-                  {item.value} ({item.percent}%)
-                </div>
-                <div className="text-body-secondary">{item.city}</div>
-                {/* <CProgress thin className="mt-2" color={item.color} value={item.percent} /> */}
-              </CCol>
-            ))}
-          </CRow>
-        </CCardFooter>
-      </CCard>
-      <CCard className="mb-4">
-   
-  </CCard>
-  <CRow>
-      {/* First Column */}
-      <CCol sm={4}>
-        {/* Daily Uro */}
-        <CCard className="mb-4">
-          <CCardBody>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h6>Daily Uro</h6>
-                <p>-9.72%</p>
-              </div>
-              
-            </div>
-          </CCardBody>
-        </CCard>
-
-        {/* Daily SSO */}
-        <CCard className="mb-4">
-          <CCardBody>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <h6>Daily SSO</h6>
-                <p>-67.99%</p>
-              </div>
-              
-            </div>
-          </CCardBody>
-        </CCard>
-      </CCol>
-
-      {/* Second Column - Revenue Charts */}
-      <CCol sm={4}>
-        <CCard className="mb-4">
-          <CCardHeader>Revenue</CCardHeader>
-          <CCardBody>
-           
-          </CCardBody>
-        </CCard>
-
-        {/* Revenue by Branch */}
-        <CCard className="mb-4">
-          <CCardHeader>Revenue By Branch</CCardHeader>
-          <CCardBody>
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-              <div>
-                <h6>Highest</h6>
-                <p>67,273,653,395</p>
-                <small>PURWOKERTO</small>
-              </div>
-              <div>
-                <h6>Average</h6>
-                <p>46,251,691,200</p>
-              </div>
-              <div>
-                <h6>Lowest</h6>
-                <p>32,877,311,298</p>
-                <small>SALATIGA</small>
-              </div>
-            </div>
-          </CCardBody>
-        </CCard>
-      </CCol>
-
-      {/* Third Column - Trade Section */}
-      <CCol sm={4}>
-        <CCard className="mb-4">
+      <CCol sm={8} xl={6} xxl={4}>
+        <CCard className="mb-4" style={{ height: '39%' }}> {/* Match the height of Target Total Revenue */}
           <CCardHeader>TRADE</CCardHeader>
           <CCardBody>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div style={{ width: '45%' }}>
-                <div style={{ backgroundColor: 'green', height: '100px', textAlign: 'center' }}>
+              <div style={{ width: '45%'  }}>
+                <div style={{ backgroundColor: 'green', height: '200px', textAlign: 'center' }}>
                   <p>Trade Supply</p>
                   <p>62.22B</p>
                 </div>
               </div>
               <div style={{ width: '45%' }}>
-                <div style={{ backgroundColor: 'orange', height: '100px', textAlign: 'center' }}>
+                <div style={{ backgroundColor: 'orange', height: '200px', textAlign: 'center' }}>
                   <p>Trade Rebuy</p>
                   <p>61.08B</p>
                 </div>
@@ -415,7 +328,77 @@ const Dashboard = () => {
             </div>
           </CCardBody>
         </CCard>
+       <br/>
+       <br/>
+        <CWidgetStatsA
+              title={
+                <span style={{ fontWeight: 'bold', fontSize: '18px', color: '#000' }}>
+                  Target Total Revenue
+                </span>
+              }
+              chart={
+                <div style={{ position: 'relative', height: '200px', padding: '10px' }}>
+                  {/* Custom styles for chart height and padding */}
+                  <CChartDoughnut
+                    data={{
+                      labels: ['North Central Java', 'South Central Java'],
+                      datasets: [
+                        {
+                          data: [46.01, 53.99], // Your actual values for the two regions
+                          backgroundColor: ['#FFCE56', '#FF6347'], // Custom colors
+                          hoverBackgroundColor: ['#FFC300', '#FF4500'], // Hover effect colors
+                          borderWidth: 0, // No border
+                        },
+                      ],
+                    }}
+
+                    options={{
+                      maintainAspectRatio: false,
+                      cutout: '80%', // Controls the inner circle size
+                      plugins: {
+                        legend: {
+                          display: true,
+                          position: 'right', // Display the labels on the right side
+                          labels: {
+                            usePointStyle: true, // Dot point style for legend items
+                            font: {
+                              size: 10, // Adjust font size as needed
+                              weight: 'bold',
+                            },
+                          },
+                        },
+                        
+                        
+                        beforeDraw: function (chart) {
+                          const { ctx, width, height } = chart;
+                          ctx.save();
+                          const text = '46.01%'; // Center percentage text
+                          ctx.textAlign = 'center';
+                          ctx.textBaseline = 'middle';
+                          ctx.font = 'bold 24px Arial'; // Customize font size and style
+                          const textX = width / 2;
+                          const textY = height / 2;
+                          ctx.fillText(text, textX, textY); // Draw the text in the center
+                          ctx.restore();
+                        },
+                      },
+                    }}
+                  />
+                  <div style={{
+                        position: 'relative', 
+                        top: '-85px', 
+                        left:'-60px',
+                        textAlign: 'center', 
+                        fontWeight: 'bold', 
+                        fontSize: '15px'
+                      }}>
+                        53.99%
+                      </div>
+                </div>
+              }
+            />
       </CCol>
+
     </CRow>
     </>
   )

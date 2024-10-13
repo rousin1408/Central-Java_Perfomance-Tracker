@@ -207,11 +207,11 @@ const centerTextPlugin = {
         </CWidgetStatsA>
 
       </CCol>
-      <CCol sm={6} xl={4} xxl={3}>
+      <CCol sm={7} xl={4} xxl={3}>
         <CWidgetStatsA
           title={<span style={{ fontWeight: 'bold', fontSize: '18px', color: '#000' }}>Subscriber</span>}
           chart={
-            <div style={{ padding: '20px', paddingBottom: '16px', position: 'relative' }}> 
+            <div style={{ padding: '28px', position: 'relative' }}> 
               {/* Box with 2x2 layout and vertical/horizontal divider */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr' }}>
                 
