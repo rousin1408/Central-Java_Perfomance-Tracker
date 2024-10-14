@@ -10,7 +10,7 @@ import {
   CSidebarToggler,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-
+import IndosatImg from '/src/assets/images/indosat.jpg'
 import { AppSidebarNav } from './AppSidebarNav'
 
 import { logo } from 'src/assets/brand/logo'
@@ -37,7 +37,8 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <img src="/src/assets/images/favicon.png"className="sidebar-brand-full" height={64}/>
+          <img src={IndosatImg} className="sidebar-brand-full" height={64}/>
+
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"
