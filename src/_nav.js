@@ -12,6 +12,7 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
+  cilCloudDownload
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -22,9 +23,15 @@ const _nav = [
     to: '/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     badge: {
-      color: 'info',
+      color: 'info'
     },
   },
+  // {
+  //   component: CNavItem,
+  //   name: 'Upload CSV',
+  //   to: '/UploadCSV',
+  //   icon: <CIcon icon={cilCloudDownload} customClassName="nav-icon" />,
+  // },
   
 ]
 

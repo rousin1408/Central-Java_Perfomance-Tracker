@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-
+import axios from 'axios'; // Ensure axios is imported
 import {
   CRow,
   CCol,
@@ -15,9 +15,8 @@ import { CChartBar, CChartDoughnut, CChartLine } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
 import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 
-const WidgetsDropdown = (props) => {
-  const widgetChartRef1 = useRef(null)
-  const widgetChartRef2 = useRef(null)
+const WidgetsDropdown = (props,{selectedDate}) => {
+  const chartRef = useRef(null);
 const centerTextPlugin = {
     id: 'centerText',
     afterDraw(chart) {
@@ -37,82 +36,138 @@ const centerTextPlugin = {
       ctx.save();
     },
   };
+  const [totalRevenueData, setTotalRevenueData] = useState({
+    totalRevenue: { lmtd: 0, mtd: 0,
+       vlrlmtd: 0, vlrmtd: 0,
+       rgu90lmtd: 0, rgu90mtd: 0,
+       net30: 0, net90: 0,
+       churn30: 0, churn90: 0,
+       totRevGrowth:0, vltGrowth:0,
+      rgu90Growth:0 },
+  });
   useEffect(() => {
     document.documentElement.addEventListener('ColorSchemeChange', () => {
-      if (widgetChartRef1.current) {
+      if (chartRef.current) {
         setTimeout(() => {
-          widgetChartRef1.current.data.datasets[0].pointBackgroundColor = getStyle('--cui-primary')
-          widgetChartRef1.current.update()
-        })
+          chartRef.current.options.scales.x.grid.borderColor = getStyle('--cui-border-color-translucent');
+          chartRef.current.options.scales.x.grid.color = getStyle('--cui-border-color-translucent');
+          chartRef.current.options.scales.x.ticks.color = getStyle('--cui-body-color');
+          chartRef.current.options.scales.y.grid.borderColor = getStyle('--cui-border-color-translucent');
+          chartRef.current.options.scales.y.grid.color = getStyle('--cui-border-color-translucent');
+          chartRef.current.options.scales.y.ticks.color = getStyle('--cui-body-color');
+          chartRef.current.update();
+        });
       }
+    });
+   
+    const fetchData = async () => {
+      try {
+        const responseapi = selectedDate
+        ? 'http://localhost:8080/api/salesdata/TopColumn?created_at='+selectedDate
+        : 'http://localhost:8080/api/salesdata/TopColumn';
+        const response = await axios.get(responseapi);
+        const salesData = response.data;
 
-      if (widgetChartRef2.current) {
-        setTimeout(() => {
-          widgetChartRef2.current.data.datasets[0].pointBackgroundColor = getStyle('--cui-info')
-          widgetChartRef2.current.update()
-        })
+        // Assuming the response is structured like:
+        // { totRevLmtd: number, totRevGrowth: number }
+        const totalRevenueData = {
+          totalRevenue: {
+            lmtd: salesData.totRevLmtd,
+            mtd: salesData.totRevMtd,
+            vlrlmtd: salesData.vlrLmtd,
+            vlrmtd: salesData.vlrMtd,
+            rgu90lmtd: salesData.rgu90Lmtd,
+            rgu90mtd: salesData.rgu90Mtd,
+            net30: salesData.netAdd30d,
+            net90:salesData.netAdd90d,
+            churn30:salesData.grossMtdChurn30d,
+            churn90:salesData.grossMtdChurn90d,
+            totRevGrowth:salesData.totRevGrowth,
+            rgu90Growth:salesData.rgu90Growth,
+            vltGrowth:salesData.vlrGrowth
+          },
+        };
+
+        setTotalRevenueData(totalRevenueData);
+      } catch (error) {
+        console.error('Error fetching sales data:', error);
       }
-    })
-  }, [widgetChartRef1, widgetChartRef2])
+    };
+
+    fetchData();
+  }, [])
 
   return (
     <CRow className={props.className}>
       <CCol sm={6} xl={4} xxl={3}>
-        <CWidgetStatsA
-           title={<span style={{ fontWeight: 'bold', fontSize: '18px', color: '#000' }}>Total Revenue</span>}
-          chart={
-            <div style={{ paddingBottom: '20px' }}> {/* Added padding at the bottom */}
-              <CChartBar
-                data={{
-                  labels: ['LMTD', 'MTD'], // Labels for LMTD and MTD
-                  datasets: [
-                    {
-                      label: 'Revenue',
-                      data: [205.84, 200.08], // Values for LMTD and MTD
-                      backgroundColor: ['#dcdcdc', '#ffcc00'], // Colors for LMTD and MTD
-                      barPercentage: 0.6, // Adjust bar width
-                      borderRadius: 5, // Rounded bar edges
-                    },
+      <CWidgetStatsA
+      title={
+        <span style={{ fontWeight: 'bold', fontSize: '18px' }}>Total Revenue</span>
+      }
+      chart={
+        <div style={{ paddingBottom: '20px' }}>
+          <CChartBar
+            data={{
+              labels: ['LMTD', 'MTD'],
+              datasets: [
+                {
+                  label: 'Revenue',
+                  data: [
+                    Math.round(totalRevenueData?.totalRevenue?.lmtd || 0),
+                    Math.round(totalRevenueData?.totalRevenue?.mtd || 0),
                   ],
-                }}
-                options={{
-                  responsive: true,
-                  plugins: {
-                    legend: { display: false }, // Hide legend
+                  backgroundColor: ['#dcdcdc', '#ffcc00'],
+                  barPercentage: 0.6,
+                  borderRadius: 5,
+                },
+              ],
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: { display: false },
+                datalabels: {
+                  anchor: 'center', // Tempatkan label di dalam batang
+                  align: 'center', // Menyesuaikan label agar berada di tengah
+                  color: '#fff', // Warna teks di dalam batang
+                  font: {
+                    weight: 'bold',
+                    size: '12', // Ukuran font
                   },
-                  
-                  scales: {
-                    x: {
-                      grid: {
-                        display: false, // Hide grid lines on the x-axis
-                      },
-                    },
-                    y: {
-                      grid: {
-                        display: false, // Hide grid lines on the y-axis
-                      },
-                      ticks: {
-                        display: false, // Hide y-axis ticks
-                      },
-                    },
+                  formatter: (value) => {
+                    return value; // Tampilkan nilai di dalam batang
                   },
-                }}
-              />
-                    {/* Add MOM percentage below the chart */}
-      <div style={{ textAlign: 'center', marginTop: '10px' }}>
-      <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#6c757d' }}>MOM</span> {/* MOM Text */}
-      <span style={{ color: 'red', fontWeight: 'bold', marginLeft: '5px' }}> {/* Arrow and percentage */}
-        ▼ 24.0%
-      </span>
-    </div>
-            </div>
-          }
-        />
+                },
+              },
+              scales: {
+                x: {
+                  grid: { display: false },
+                },
+                y: {
+                  grid: { display: false },
+                  ticks: { display: false },
+                },
+              },
+              
+            }}
+          />
+          <div style={{ textAlign: 'center', marginTop: '10px' }}>
+            <span style={{ fontWeight: 'bold', fontSize: '14px' }}>MOM</span>
+            <span style={{ color: totalRevenueData.totalRevenue.totRevGrowth < 0 ? 'red' : 'green', fontWeight: 'bold', marginLeft: '5px' }}>
+            {totalRevenueData.totalRevenue.totRevGrowth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.totRevGrowth.toFixed(2)}%
+            </span>
+          </div>
+        </div>
+      }
+    />
+
+
       </CCol>
 
       <CCol sm={6} xl={4} xxl={3}>
+        
         <CWidgetStatsA
-          title={<span style={{ fontWeight: 'bold', fontSize: '18px', color: '#000' }}>RGU GA</span>}
+          title={<span style={{ fontWeight: 'bold', fontSize: '18px' }}>RGU GA</span>}
           chart={
             <div style={{ paddingBottom: '20px' }}>
               <CChartBar
@@ -121,7 +176,10 @@ const centerTextPlugin = {
                   datasets: [
                     {
                       label: 'Revenue',
-                      data: [205.84, 200.08], // LMTD, MTD values
+                      data: [
+                        Math.round(totalRevenueData?.totalRevenue?.rgu90lmtd || 0),
+                        Math.round(totalRevenueData?.totalRevenue?.rgu90mtd|| 0),
+                      ],
                       backgroundColor: ['#dcdcdc', '#ffcc00'],
                       barPercentage: 0.6,
                       borderRadius: 5,
@@ -146,9 +204,9 @@ const centerTextPlugin = {
               />
                     {/* Add MOM percentage below the chart */}
             <div style={{ textAlign: 'center', marginTop: '10px' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#6c757d' }}>MOM</span> {/* MOM Text */}
-            <span style={{ color: 'red', fontWeight: 'bold', marginLeft: '5px' }}> {/* Arrow and percentage */}
-              ▼ 24.0%
+            <span style={{ fontWeight: 'bold', fontSize: '14px' }}>MOM</span> {/* MOM Text */}
+            <span style={{ color: totalRevenueData.totalRevenue.rgu90Growth < 0 ? 'red' : 'green', fontWeight: 'bold', marginLeft: '5px' }}> {/* Arrow and percentage */}
+            {totalRevenueData.totalRevenue.rgu90Growth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.rgu90Growth.toFixed(2)}%
             </span>
           </div>
             </div>
@@ -161,7 +219,7 @@ const centerTextPlugin = {
 
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
-          title={<span style={{ fontWeight: 'bold', fontSize: '18px', color: '#000' }}>VLR</span>}
+          title={<span style={{ fontWeight: 'bold', fontSize: '18px' }}>VLR</span>}
           chart={
             <div style={{ paddingBottom: '20px' }}>
               <CChartBar
@@ -170,7 +228,10 @@ const centerTextPlugin = {
                   datasets: [
                     {
                       label: 'Revenue',
-                      data: [205.84, 200.08], // LMTD, MTD values
+                      data: [
+                        Math.round(totalRevenueData?.totalRevenue?.vlrlmtd || 0),
+                        Math.round(totalRevenueData?.totalRevenue?.vlrmtd || 0),
+                      ],
                       backgroundColor: ['#dcdcdc', '#ffcc00'],
                       barPercentage: 0.6,
                       borderRadius: 5,
@@ -195,9 +256,9 @@ const centerTextPlugin = {
               />
                     {/* Add MOM percentage below the chart */}
             <div style={{ textAlign: 'center', marginTop: '10px' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '14px', color: '#6c757d' }}>MOM</span> {/* MOM Text */}
-            <span style={{ color: 'red', fontWeight: 'bold', marginLeft: '5px' }}> {/* Arrow and percentage */}
-              ▼ 24.0%
+            <span style={{ fontWeight: 'bold', fontSize: '14px' }}>MOM</span> {/* MOM Text */}
+            <span style={{ color: totalRevenueData.totalRevenue.vltGrowth < 0 ? 'red' : 'green', fontWeight: 'bold', marginLeft: '5px' }}> {/* Arrow and percentage */}
+            {totalRevenueData.totalRevenue.vltGrowth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.vltGrowth.toFixed(2)}%
             </span>
           </div>
             </div>
@@ -209,7 +270,7 @@ const centerTextPlugin = {
       </CCol>
       <CCol sm={7} xl={4} xxl={3}>
         <CWidgetStatsA
-          title={<span style={{ fontWeight: 'bold', fontSize: '18px', color: '#000' }}>Subscriber</span>}
+          title={<span style={{ fontWeight: 'bold', fontSize: '18px' }}>Subscriber</span>}
           chart={
             <div style={{ padding: '28px', position: 'relative' }}> 
               {/* Box with 2x2 layout and vertical/horizontal divider */}
@@ -217,8 +278,8 @@ const centerTextPlugin = {
                 
                 {/* Net Add 30D */}
                 <div style={{ textAlign: 'center' ,margin:'5px' }}>
-                  <div style={{ color: '#000' }}>Net Add 30D</div>
-                  <div style={{ color: 'red', fontWeight: 'Bold' }}>(406,797)</div>
+                  <div>Net Add 30D</div>
+                  <div style={{ color: 'red', fontWeight: 'Bold' }}>({Math.round(totalRevenueData.totalRevenue.net30)})</div>
                 </div>
 
                 {/* Vertical Divider */}
@@ -231,8 +292,8 @@ const centerTextPlugin = {
 
                 {/* Net Add 90D */}
                 <div style={{ textAlign: 'center',margin:'5px' }}>
-                  <div style={{ color: '#000' }}>Net Add 90D</div>
-                  <div style={{ color: 'red', fontWeight: 'Bold' }}>(243,807)</div>
+                  <div>Net Add 90D</div>
+                  <div style={{ color: 'red', fontWeight: 'Bold' }}>({Math.round(totalRevenueData.totalRevenue.net90)})</div>
                 </div>
 
                 {/* Horizontal Divider */}
@@ -248,8 +309,8 @@ const centerTextPlugin = {
 
                 {/* Gross Churn 30D */}
                 <div style={{ textAlign: 'center',margin:'5px' }}>
-                  <div style={{ color: '#000' }}>Gross Churn 30D</div>
-                  <div style={{ color: 'green', fontWeight: 'Bold' }}>818,371</div>
+                  <div>Gross Churn 30D</div>
+                  <div style={{ color: 'green', fontWeight: 'Bold' }}>{Math.round(totalRevenueData.totalRevenue.churn30)}</div>
                 </div>
 
                 {/* Vertical Divider */}
@@ -262,8 +323,8 @@ const centerTextPlugin = {
 
                 {/* Gross Churn 90D */}
                 <div style={{ textAlign: 'center',margin:'5px' }}>
-                  <div style={{ color: '#000'}}>Gross Churn 90D</div>
-                  <div style={{ color: 'green', fontWeight: 'Bold' }}>282,242</div>
+                  <div>Gross Churn 90D</div>
+                  <div style={{ color: 'green', fontWeight: 'Bold' }}>{Math.round(totalRevenueData.totalRevenue.churn90)}</div>
                 </div>
 
               </div>
