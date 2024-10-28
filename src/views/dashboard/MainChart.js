@@ -38,11 +38,11 @@ const MainChart = ({ selectedDate }) => {
     const fetchAverageSalesData = async () => {
       try {
         const averageUrl = selectedDate
-        ? 'http://localhost:8080/api/salesdata/average?created_at='+selectedDate
-        : 'http://localhost:8080/api/salesdata/average';
+        ? import.meta.env.VITE_API_URL +'/average?created_at='+selectedDate
+        : import.meta.env.VITE_API_URL +'/average?created_at='+selectedDate;
         const response = await axios.get(averageUrl);
         const averageData = response.data;
-
+        console.log(import.meta.env.VITE_API_URL +'/average?created_at='+selectedDate)
         // Log the response to ensure it's an array
         console.log('API Response:', averageData);
 
@@ -85,7 +85,7 @@ const MainChart = ({ selectedDate }) => {
     <>
       <CChartLine
         ref={chartRef}
-        style={{ height: '200px', marginTop: '40px' }}
+        style={{ height: '290px', marginTop: '40px' }}
         data={chartData} // Use the state for data
         options={{
           maintainAspectRatio: false,
@@ -115,7 +115,7 @@ const MainChart = ({ selectedDate }) => {
               
               ticks: {
                 color: getStyle('--cui-body-color'),
-                maxTicksLimit: 5,
+                maxTicksLimit: 20,
                 stepSize: Math.ceil(250 / 5),
               },
             },

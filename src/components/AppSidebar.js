@@ -11,6 +11,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import IndosatImg from '/src/assets/images/indosat.jpg'
+import IndosatWhite from 'src/assets/images/indosat_white.png'
 import { AppSidebarNav } from './AppSidebarNav'
 
 import { logo } from 'src/assets/brand/logo'
@@ -19,7 +20,7 @@ import { sygnet } from 'src/assets/brand/sygnet'
 // sidebar nav config
 import navigation from '../_nav'
 
-const AppSidebar = () => {
+const AppSidebar = ({color}) => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
@@ -37,8 +38,11 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <img src={IndosatImg} className="sidebar-brand-full" height={64}/>
+        
+                <img src={IndosatImg} className="sidebar-brand-full" height={64} alt="Indosat Logo" />
+           
 
+          
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"

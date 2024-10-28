@@ -25,10 +25,11 @@ import {
   cilSun,
 } from '@coreui/icons'
 
-import { AppBreadcrumb } from './index'
+import { AppBreadcrumb, AppSidebar } from './index'
 import { AppHeaderDropdown } from './header/index'
 
 const AppHeader = () => {
+  
   const headerRef = useRef()
   const { colorMode, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
 
@@ -43,7 +44,9 @@ const AppHeader = () => {
   }, [])
 
   return (
+    
     <CHeader position="sticky" className="mb-4 p-0" ref={headerRef}>
+      <AppSidebar color={colorMode} />
       <CContainer className="border-bottom px-4" fluid>
         <CHeaderToggler
           onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}

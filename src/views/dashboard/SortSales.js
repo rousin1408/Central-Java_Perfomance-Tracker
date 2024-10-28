@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   CButton,
@@ -7,66 +7,75 @@ import {
   CCardHeader,
   CCol,
   CForm,
-  CFormSelect,
   CFormLabel,
   CRow,
   CAlert
 } from '@coreui/react';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css"; // Import CSS untuk DatePicker
 
 const SortSales = ({ onDateChange }) => {
-    const [createdDates, setCreatedDates] = useState([]);  // Store distinct dates from backend
-    const [selectedDate, setSelectedDate] = useState(null);  // State for selected date
-    const [salesData, setSalesData] = useState([]);  // State to store filtered sales data
-    const [loading, setLoading] = useState(false);  // Loading state
-    const [responseMessage, setResponseMessage] = useState(''); // Response message state
+  const [createdDates, setCreatedDates] = useState([]); // Menyimpan tanggal dari backend
+  const [selectedDate, setSelectedDate] = useState(new Date()); // Default to today's date
+  const [salesData, setSalesData] = useState([]); // Menyimpan data penjualan
+  const [loading, setLoading] = useState(false); // Status loading
+  const [responseMessage, setResponseMessage] = useState(''); // Pesan respon
   
-    // Fetch distinct created_at dates from backend when component mounts
-    useEffect(() => {
-      const fetchDates = async () => {
-        try {
-          const response = await axios.get('http://localhost:8080/api/salesdata/created-at');
-          setCreatedDates(response.data);
-        } catch (error) {
-          console.error('Error fetching dates:', error);
-          setResponseMessage('Error fetching dates.');
-        }
-      };
-  
-      fetchDates();
-    }, []);
-  // Handle date selection
-  const handleDateChange = (e) => {
-    const date = e.target.value || null;  // Set to null if no date is selected
+  // Fetch tanggal dari backend saat komponen mount
+  useEffect(() => {
+    const fetchDates = async () => {
+      try {
+        const response = await axios.get(import.meta.env.VITE_API_URL + '/created-at');
+        setCreatedDates(response.data);
+      } catch (error) {
+        console.error('Error fetching dates:', error);
+        setResponseMessage('Error fetching dates.');
+      }
+    };
+
+    fetchDates();
+  }, []);
+  const formatTodayDate = () => {
+    const today = new Date();
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return today.toLocaleDateString('id-ID', options); // Formats as "28 Oktober 2024"
+  };
+   // Handle perubahan tanggal
+   const handleDateChange = (date) => {
     setSelectedDate(date);
-    onDateChange(date); // Call the function from props
+    onDateChange(formatDate(date)); // Send the formatted date to the parent
   };
 
-  // Handle form submission
-  
+  // Format date to 'yyyy-mm-dd'
+  const formatDate = (date) => {
+    if (!date) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
+  
   return (
-    <CRow>
-      <CCol xs={12}>
+
         <CCard className="mb-4">
-          
           <CCardBody>
-            <CForm className="form-layout" >
-              <CFormLabel htmlFor="formSelectDate" style={{ fontSize: '1.2rem' }}>
-                Sort By Created Date:
+            <CForm className="form-layout">
+              <CFormLabel htmlFor="formDatePicker" style={{ fontSize: '1.2rem' }}>
+                Sort By Date:
               </CFormLabel>
-              <CFormSelect 
-                id="formSelectDate" 
-                size="lg" 
-                onChange={handleDateChange}  // Link dropdown to state
-                value={selectedDate}
-                style={{ fontSize: '1rem' }}
-                disabled={loading}  // Disable dropdown when loading
-              >
-            <option value="null">-- Select a Date --</option>
-            {createdDates.map((date, index) => (
-              <option key={index} value={date}>{date}</option>
-            ))}
-              </CFormSelect>
+              <br/>
+              <DatePicker
+                id="formDatePicker"
+                selected={selectedDate}
+                onChange={handleDateChange} // Mengatur state saat tanggal dipilih
+                dateFormat="dd MMMM yyyy" // Format tanggal yang diinginkan
+                placeholderText={formatTodayDate()} // Display today as placeholder
+                className="form-control mp-4"
+                
+                showPopperArrow={false} // Optional: menghilangkan panah pada popper
+                disabled={loading} // Disable DatePicker saat loading
+              />
               {responseMessage && (
                 <CAlert 
                   color={responseMessage.includes('Error') ? 'danger' : 'success'}
@@ -76,12 +85,11 @@ const SortSales = ({ onDateChange }) => {
                   {responseMessage}
                 </CAlert>
               )}
-
             </CForm>
           </CCardBody>
         </CCard>
-      </CCol>
-    </CRow>
+
+    
   );
 };
 

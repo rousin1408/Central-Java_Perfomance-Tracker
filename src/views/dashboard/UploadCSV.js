@@ -17,6 +17,7 @@ import {
   cilWarning,
 } from '@coreui/icons'
 const UploadCSV = () => {
+
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [responseMessage, setResponseMessage] = useState('');
@@ -40,7 +41,7 @@ const UploadCSV = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://localhost:8080/api/salesdata/upload', formData, {
+      const response = await axios.post(import.meta.env.VITE_API_URL +'/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -59,16 +60,7 @@ const UploadCSV = () => {
     }
   };
 
-  // Set timer to hide alert after a few seconds
-  useEffect(() => {
-    if (responseMessage) {
-      const timer = setTimeout(() => {
-        setResponseMessage('');
-      }, 5000); // Menghilangkan alert setelah 5 detik
 
-      return () => clearTimeout(timer); // Cleanup timer on unmount
-    }
-  }, [responseMessage]);
 
   return (
     <CRow>

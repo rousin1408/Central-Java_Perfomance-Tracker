@@ -15,8 +15,15 @@ import { CChartBar, CChartDoughnut, CChartLine } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
 import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 
-const WidgetsDropdown = (props,{selectedDate}) => {
+const WidgetsDropdown = ({ selectedDate }) => {
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); // Menambahkan 1 karena bulan dimulai dari 0
+  const dd = String(today.getDate()).padStart(2, '0');
+  const formattedToday = `${yyyy}-${mm}-${dd}`;
   const chartRef = useRef(null);
+
 const centerTextPlugin = {
     id: 'centerText',
     afterDraw(chart) {
@@ -63,8 +70,8 @@ const centerTextPlugin = {
     const fetchData = async () => {
       try {
         const responseapi = selectedDate
-        ? 'http://localhost:8080/api/salesdata/TopColumn?created_at='+selectedDate
-        : 'http://localhost:8080/api/salesdata/TopColumn';
+        ? import.meta.env.VITE_API_URL +'/TopColumn?created_at='+selectedDate
+        : import.meta.env.VITE_API_URL +'/TopColumn?created_at='+formattedToday;
         const response = await axios.get(responseapi);
         const salesData = response.data;
 
@@ -84,7 +91,7 @@ const centerTextPlugin = {
             churn90:salesData.grossMtdChurn90d,
             totRevGrowth:salesData.totRevGrowth,
             rgu90Growth:salesData.rgu90Growth,
-            vltGrowth:salesData.vlrGrowth
+            vltGrowth:salesData.vlrGrowth,
           },
         };
 
@@ -98,7 +105,7 @@ const centerTextPlugin = {
   }, [])
 
   return (
-    <CRow className={props.className}>
+    <CRow className="mb-4" >
       <CCol sm={6} xl={4} xxl={3}>
       <CWidgetStatsA
       title={
@@ -154,7 +161,7 @@ const centerTextPlugin = {
           <div style={{ textAlign: 'center', marginTop: '10px' }}>
             <span style={{ fontWeight: 'bold', fontSize: '14px' }}>MOM</span>
             <span style={{ color: totalRevenueData.totalRevenue.totRevGrowth < 0 ? 'red' : 'green', fontWeight: 'bold', marginLeft: '5px' }}>
-            {totalRevenueData.totalRevenue.totRevGrowth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.totRevGrowth.toFixed(2)}%
+            {totalRevenueData.totalRevenue.totRevGrowth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.totRevGrowth === null ? 0 : totalRevenueData.totalRevenue.totRevGrowth.toFixed(2)}%
             </span>
           </div>
         </div>
@@ -206,7 +213,7 @@ const centerTextPlugin = {
             <div style={{ textAlign: 'center', marginTop: '10px' }}>
             <span style={{ fontWeight: 'bold', fontSize: '14px' }}>MOM</span> {/* MOM Text */}
             <span style={{ color: totalRevenueData.totalRevenue.rgu90Growth < 0 ? 'red' : 'green', fontWeight: 'bold', marginLeft: '5px' }}> {/* Arrow and percentage */}
-            {totalRevenueData.totalRevenue.rgu90Growth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.rgu90Growth.toFixed(2)}%
+            {totalRevenueData.totalRevenue.rgu90Growth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.rgu90Growth === null ? 0 : totalRevenueData.totalRevenue.rgu90Growth.toFixed(2)}%
             </span>
           </div>
             </div>
@@ -258,7 +265,7 @@ const centerTextPlugin = {
             <div style={{ textAlign: 'center', marginTop: '10px' }}>
             <span style={{ fontWeight: 'bold', fontSize: '14px' }}>MOM</span> {/* MOM Text */}
             <span style={{ color: totalRevenueData.totalRevenue.vltGrowth < 0 ? 'red' : 'green', fontWeight: 'bold', marginLeft: '5px' }}> {/* Arrow and percentage */}
-            {totalRevenueData.totalRevenue.vltGrowth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.vltGrowth.toFixed(2)}%
+            {totalRevenueData.totalRevenue.vltGrowth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.vltGrowth === null ? 0 : totalRevenueData.totalRevenue.vltGrowth.toFixed(2)}%
             </span>
           </div>
             </div>
