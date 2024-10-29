@@ -747,8 +747,7 @@ const Dashboard = () => {
             </div>
             <div style={{ paddingLeft: '20px', fontSize:'12px' }}>
               <h6>QSSO</h6>
-              <p>{totalRevenueData.totalRevenue.qssomtd === null ? 0 : totalRevenueData.totalRevenue.qssomtd.toFixed(2)}</p>
-              <p>Month To Date</p>
+              <p>{totalRevenueData.totalRevenue.qssomtd === null ? 0 : totalRevenueData.totalRevenue.qssomtd.toFixed(2)}<br/>Month To Date</p>
             </div>
 
           </div>
