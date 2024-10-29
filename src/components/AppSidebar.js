@@ -11,7 +11,6 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import IndosatImg from '/src/assets/images/indosat.jpg'
-import IndosatWhite from 'src/assets/images/indosat_white.png'
 import { AppSidebarNav } from './AppSidebarNav'
 
 import { logo } from 'src/assets/brand/logo'
