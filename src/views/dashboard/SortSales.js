@@ -25,6 +25,7 @@ const SortSales = ({ onDateChange }) => {
   useEffect(() => {
     const fetchDates = async () => {
       try {
+
         const response = await axios.get(import.meta.env.VITE_API_URL + '/created-at');
         setCreatedDates(response.data);
       } catch (error) {
@@ -62,7 +63,7 @@ const SortSales = ({ onDateChange }) => {
           <CCardBody>
             <CForm className="form-layout">
               <CFormLabel htmlFor="formDatePicker" style={{ fontSize: '1.2rem' }}>
-                Sort By Date:
+                <b>Sort By Date:</b>
               </CFormLabel>
               <br/>
               <DatePicker

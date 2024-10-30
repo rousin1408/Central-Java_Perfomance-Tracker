@@ -249,165 +249,187 @@ const Dashboard = () => {
 
   return (
     <>
-    <CRow>
-      <CCol sm={6} xl={4} xxl={3}>
-      <SortSales onDateChange={handleDateChange} />
-      <CWidgetStatsA
-          chart={
-            <div style={{ padding: '0px 20px 20px 19px', paddingBottom: '20px', position: 'relative' }}> 
-              {/* Box with 2x2 layout and vertical/horizontal divider */}
-              <div style={{ display: 'grid' }}>
-                
-                {/* Net Add 30D */}
-                <div style={{ textAlign: 'Left' ,margin:'5px' }}>
-                  <div>Daily URO</div>
-
-                </div>
-                {/* Net Add 90D */}
-                <div style={{ textAlign: 'Right',margin:'5px' }}>
-                <span style={{ color: totalRevenueData.totalRevenue.dailyurogrowth < 0 ? 'Red' : 'Green', fontWeight: 'bold', marginLeft: '5px' }}>
-                {totalRevenueData.totalRevenue.dailyurogrowth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.dailyurogrowth === null ? 0 : totalRevenueData.totalRevenue.dailyurogrowth.toFixed(2)}%
-              </span>
-              </div>
-
-                {/* Horizontal Divider */}
-                <div style={{
-                  backgroundColor: '#ccc',
-                  height: '1px',
-                  width: 'calc(95% + 5px)',  // Adjust width to span full grid width
-                  gridColumn: '1 / span 3',  // Ensures it spans across both columns
-                  // marginTop: '10px',
-                  // marginBottom: '10px',
-                  alignSelf: 'center'
-                }}></div>
-
-                {/* Gross Churn 30D */}
-                <div style={{ textAlign: 'Left',margin:'5px' }}>
-                  <div >Daily SSO</div>
-                </div>
-                <div style={{ textAlign: 'Right',margin:'5px' }}>
-                <span style={{ color: totalRevenueData.totalRevenue.dailyssogrowth < 0 ? 'red' : 'green', fontWeight: 'bold', marginLeft: '5px' }}>
-                {totalRevenueData.totalRevenue.dailyssogrowth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.dailyssogrowth === null ? 0 : totalRevenueData.totalRevenue.dailyssogrowth.toFixed(2)}%
-              </span>
-              </div>
-
-              </div>
+   <CRow className="gx-3 gy-4">
+  <CCol xs={12} sm={6} lg={4} xl={3}>
+    <SortSales onDateChange={handleDateChange} />
+    <CWidgetStatsA
+      chart={
+        <div style={{ padding: '0px 10px 20px', position: 'relative' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+            <div style={{ textAlign: 'left', margin: '5px' }}>
+              <div><b>Daily URO</b></div>
             </div>
-          }
+            <div style={{ textAlign: 'right', margin: '5px' }}>
+              <span
+                style={{
+                  color: totalRevenueData.totalRevenue.dailyurogrowth < 0 ? 'red' : 'green',
+                  fontWeight: 'bold',
+                }}
+              >
+                {totalRevenueData.totalRevenue.dailyurogrowth < 0 ? '▼' : '▲'}{' '}
+                {totalRevenueData.totalRevenue.dailyurogrowth?.toFixed(2) ?? 0}%
+              </span>
+            </div>
+            <div style={{ backgroundColor: '#ccc', height: '1px', width: '100%', gridColumn: '1 / -1' }}></div>
+            <div style={{ textAlign: 'left', margin: '5px' }}>
+              <div><b>Daily SSO</b></div>
+            </div>
+            <div style={{ textAlign: 'right', margin: '5px' }}>
+              <span
+                style={{
+                  color: totalRevenueData.totalRevenue.dailyssogrowth < 0 ? 'red' : 'green',
+                  fontWeight: 'bold',
+                }}
+              >
+                {totalRevenueData.totalRevenue.dailyssogrowth < 0 ? '▼' : '▲'}{' '}
+                {totalRevenueData.totalRevenue.dailyssogrowth?.toFixed(2) ?? 0}%
+              </span>
+            </div>
+          </div>
+        </div>
+      }
+    />
+  </CCol>
+
+  <CCol xs={12} sm={6} lg={4} xl={3}>
+  <CWidgetStatsA
+    title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>RGU GA</span>}
+    chart={
+      <div style={{ padding: '5% 0', height: '100%' }}>
+        <CChartBar
+          data={{
+            labels: ['LMTD', 'MTD'],
+            datasets: [
+              {
+                label: 'Revenue',
+                data: [
+                  Math.round(totalRevenueData?.totalRevenue?.rgu90lmtd || 0),
+                  Math.round(totalRevenueData?.totalRevenue?.rgu90mtd || 0),
+                ],
+                backgroundColor: ['#dcdcdc', '#ffcc00'],
+                barPercentage: 0.6,
+                borderRadius: 5,
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: {
+                  font: {
+                    size: '1em',
+                  },
+                },
+              },
+              y: {
+                grid: { display: false },
+                ticks: {
+                  display: false,
+                  font: {
+                    size: '1em',
+                  },
+                },
+              },
+            },
+          }}
         />
-      </CCol>
-     
-      <CCol sm={6} xl={4} xxl={3}>
-        
-        <CWidgetStatsA
-          title={<span style={{ fontWeight: 'bold', fontSize: '18px' }}>RGU GA</span>}
-          chart={
-            <div style={{ paddingBottom: '20px' }}>
-              <CChartBar
-                data={{
-                  labels: ['LMTD', 'MTD'],
-                  datasets: [
-                    {
-                      label: 'Revenue',
-                      data: [
-                        Math.round(totalRevenueData?.totalRevenue?.rgu90lmtd || 0),
-                        Math.round(totalRevenueData?.totalRevenue?.rgu90mtd|| 0),
-                      ],
-                      backgroundColor: ['#dcdcdc', '#ffcc00'],
-                      barPercentage: 0.6,
-                      borderRadius: 5,
-                    },
-                  ],
-                }}
-                options={{
-                  responsive: true,
-                  plugins: {
-                    legend: { display: false },
+        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <span style={{ fontWeight: 'bold', fontSize: '1em' }}>MOM</span>
+          <span
+            style={{
+              color: totalRevenueData.totalRevenue.rgu90Growth < 0 ? 'red' : 'green',
+              fontWeight: 'bold',
+              marginLeft: '5px',
+              fontSize: '1em',
+            }}
+          >
+            {totalRevenueData.totalRevenue.rgu90Growth < 0 ? '▼' : '▲'}{' '}
+            {totalRevenueData.totalRevenue.rgu90Growth?.toFixed(2) ?? 0}%
+          </span>
+        </div>
+      </div>
+    }
+  />
+</CCol>
+
+
+<CCol xs={12} sm={6} lg={4} xl={3}>
+  <CWidgetStatsA
+    title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>VLR</span>}
+    chart={
+      <div style={{ padding: '5% 0', height: '100%' }}>
+        <CChartBar
+          data={{
+            labels: ['LMTD', 'MTD'],
+            datasets: [
+              {
+                label: 'Revenue',
+                data: [
+                  Math.round(totalRevenueData?.totalRevenue?.vlrlmtd || 0),
+                  Math.round(totalRevenueData?.totalRevenue?.vlrmtd || 0),
+                ],
+                backgroundColor: ['#dcdcdc', '#ffcc00'],
+                barPercentage: 0.6,
+                borderRadius: 5,
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: {
+                  font: {
+                    size: '1em', // Relative font size
                   },
-                  scales: {
-                    x: {
-                      grid: { display: false },
-                    },
-                    y: {
-                      grid: { display: false },
-                      ticks: { display: false },
-                    },
+                },
+              },
+              y: {
+                grid: { display: false },
+                ticks: {
+                  display: false,
+                  font: {
+                    size: '1em', // Relative font size
                   },
-                }}
-              />
-                    {/* Add MOM percentage below the chart */}
-            <div style={{ textAlign: 'center', marginTop: '10px' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '14px' }}>MOM</span> {/* MOM Text */}
-            <span style={{ color: totalRevenueData.totalRevenue.rgu90Growth < 0 ? 'red' : 'green', fontWeight: 'bold', marginLeft: '5px' }}> {/* Arrow and percentage */}
-            {totalRevenueData.totalRevenue.rgu90Growth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.rgu90Growth === null ? 0 : totalRevenueData.totalRevenue.rgu90Growth.toFixed(2)}%
-            </span>
-          </div>
-            </div>
-          }
-        >
+                },
+              },
+            },
+          }}
+        />
+        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <span style={{ fontWeight: 'bold', fontSize: '1em' }}>MOM</span>
+          <span
+            style={{
+              color: totalRevenueData.totalRevenue.vltGrowth < 0 ? 'red' : 'green',
+              fontWeight: 'bold',
+              marginLeft: '5px',
+              fontSize: '1em',
+            }}
+          >
+            {totalRevenueData.totalRevenue.vltGrowth < 0 ? '▼' : '▲'}{' '}
+            {totalRevenueData.totalRevenue.vltGrowth?.toFixed(2) ?? 0}%
+          </span>
+        </div>
+      </div>
+    }
+  />
+</CCol>
 
-        </CWidgetStatsA>
 
-      </CCol>
-
-      <CCol sm={6} xl={4} xxl={3}>
-        <CWidgetStatsA
-          title={<span style={{ fontWeight: 'bold', fontSize: '18px' }}>VLR</span>}
-          chart={
-            <div style={{ paddingBottom: '20px' }}>
-              <CChartBar
-                data={{
-                  labels: ['LMTD', 'MTD'],
-                  datasets: [
-                    {
-                      label: 'Revenue',
-                      data: [
-                        Math.round(totalRevenueData?.totalRevenue?.vlrlmtd || 0),
-                        Math.round(totalRevenueData?.totalRevenue?.vlrmtd || 0),
-                      ],
-                      backgroundColor: ['#dcdcdc', '#ffcc00'],
-                      barPercentage: 0.6,
-                      borderRadius: 5,
-                    },
-                  ],
-                }}
-                options={{
-                  responsive: true,
-                  plugins: {
-                    legend: { display: false },
-                  },
-                  scales: {
-                    x: {
-                      grid: { display: false },
-                    },
-                    y: {
-                      grid: { display: false },
-                      ticks: { display: false },
-                    },
-                  },
-                }}
-              />
-                    {/* Add MOM percentage below the chart */}
-            <div style={{ textAlign: 'center', marginTop: '10px' }}>
-            <span style={{ fontWeight: 'bold', fontSize: '14px' }}>MOM</span> {/* MOM Text */}
-            <span style={{ color: totalRevenueData.totalRevenue.vltGrowth < 0 ? 'red' : 'green', fontWeight: 'bold', marginLeft: '5px' }}> {/* Arrow and percentage */}
-            {totalRevenueData.totalRevenue.vltGrowth < 0 ? '▼' : '▲'} {totalRevenueData.totalRevenue.vltGrowth === null ? 0 : totalRevenueData.totalRevenue.vltGrowth.toFixed(2)}%
-            </span>
-          </div>
-            </div>
-          }
-        >
-
-        </CWidgetStatsA>
-
-      </CCol>
-      <CCol sm={6} xl={4} xxl={3}>
+<CCol xs={12} sm={6} lg={4} xl={3}>
         <CWidgetStatsA
           title={<span style={{ fontWeight: 'bold', fontSize: '18px' }}>Subscriber</span>}
           chart={
             <div style={{ padding: '28px', position: 'relative' }}> 
               {/* Box with 2x2 layout and vertical/horizontal divider */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr', paddingBottom: '17px' }}>
                 
                 {/* Net Add 30D */}
                 <div style={{ textAlign: 'center' ,margin:'5px' }}>
@@ -433,7 +455,7 @@ const Dashboard = () => {
                 <div style={{
                   backgroundColor: '#ccc',
                   height: '1px',
-                  width: 'calc(100% + 10px)',  // Adjust width to span full grid width
+                  width: 'calc(100% + 20px)',  // Adjust width to span full grid width
                   gridColumn: '1 / span 3',  // Ensures it spans across both columns
                   // marginTop: '10px',
                   // marginBottom: '10px',
@@ -465,337 +487,317 @@ const Dashboard = () => {
           }
         />
       </CCol>
-    </CRow>
+</CRow>
+
       <br/>
-   
-
-      <CRow>
-
-      <CCol sm={9} xl={6} xxl={5}>
-      <CWidgetStatsA
-            title={<span style={{ fontWeight: 'bold', fontSize: '18px' }}>Revenue</span>}
-            chart={
-              <div style={{ margin: '0px 20px 20px 20px' }}>
-                <CChartBar
-                  data={{
-                    labels: ['Data', 'Mobo', 'Organic', 'Mobo Trade', 'Mobo Non-trade', 'Vas'],
-                    datasets: [
-                      {
-                        label: 'Revenue',
-                        data : [
-                          totalRevenueData.totalRevenue.dataRevMtd !== null 
-                              ? totalRevenueData.totalRevenue.dataRevMtd.toFixed(2) 
-                              : 0, 
-                          totalRevenueData.totalRevenue.moboMtd !== null 
-                              ? totalRevenueData.totalRevenue.moboMtd.toFixed(2) 
-                              : 0,
-                          totalRevenueData.totalRevenue.orgRevMtd !== null 
-                              ? totalRevenueData.totalRevenue.orgRevMtd.toFixed(2) 
-                              : 0,
-                          totalRevenueData.totalRevenue.moboTradeMtd !== null 
-                              ? totalRevenueData.totalRevenue.moboTradeMtd.toFixed(2) 
-                              : 0,
-                          totalRevenueData.totalRevenue.moboNonTradeMtd !== null 
-                              ? totalRevenueData.totalRevenue.moboNonTradeMtd.toFixed(2) 
-                              : 0,
-                          totalRevenueData.totalRevenue.vasRevMtd !== null 
-                              ? totalRevenueData.totalRevenue.vasRevMtd.toFixed(2) 
-                              : 0,
-                      ],
-                        backgroundColor: [
-                          'rgba(75, 192, 192, 0.6)', // Data
-                          'rgba(255, 99, 132, 0.6)', // Mobo
-                          'rgba(54, 162, 235, 0.6)', // Organic
-                          'rgba(255, 206, 86, 0.6)',  // Mobo Trade
-                          'rgba(75, 192, 192, 0.6)', // Mobo Non-trade
-                          'rgba(153, 102, 255, 0.6)', // Vas
-                        ],
-                      },
-                    ],
-                  }}
-                  options={{
-                    indexAxis: 'y',
-                    plugins: {
-                      legend: { display: false },
-                    },
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                        ticks: {
-                          maxTicksLimit: 7,
-                          stepSize: Math.ceil(250 / 5),
-                        },
-                      },
-                    },
-                  }}
-                />
-              </div>
-            }
-          />
-
-              <br/>
+<CRow className="gx-3 gy-4">
+  <CCol sm={12} xl={6} xxl={4}>
+        <CWidgetStatsA
+          title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>Revenue</span>}
+          chart={
              
-              
-      </CCol>
-      
-      <CCol sm={7} xl={5} xxl={3}>
- 
+              <CChartBar
+                      ref={chartRef}
+                      style={{ height: '228px', margin: '2%' }}
+                      data={{
+                        labels: ['Data', 'Mobo', 'Organic', 'Mobo Trade', 'Mobo Non-trade', 'Vas'],
+                        datasets: [
+                          {
+                            label: 'Revenue',
+                            data: [
+                              totalRevenueData.totalRevenue.dataRevMtd ?? 0,
+                              totalRevenueData.totalRevenue.moboMtd ?? 0,
+                              totalRevenueData.totalRevenue.orgRevMtd ?? 0,
+                              totalRevenueData.totalRevenue.moboTradeMtd ?? 0,
+                              totalRevenueData.totalRevenue.moboNonTradeMtd ?? 0,
+                              totalRevenueData.totalRevenue.vasRevMtd ?? 0,
+                            ].map((val) => val.toFixed(2)),
+                            backgroundColor: [
+                              'rgba(75, 192, 192, 0.6)',
+                              'rgba(255, 99, 132, 0.6)',
+                              'rgba(54, 162, 235, 0.6)',
+                              'rgba(255, 206, 86, 0.6)',
+                              'rgba(75, 192, 192, 0.6)',
+                              'rgba(153, 102, 255, 0.6)',
+                            ],
+                          },
+                        ],
+                      }}
+                      options={{
+                        indexAxis: 'y',
+                        plugins: {
+                          legend: { display: false },
+                        },
+                        scales: {
+                          y: {
+                            beginAtZero: true,
+                            ticks: {
+                              maxTicksLimit: 7,
+                              stepSize: Math.ceil(250 / 5),
+                            },
+                          },
+                        },
+                      }}
+                    />
+          }
+        />
+  <br />
+</CCol>
 
+<CCol sm={12} md={6} xl={4}>
   <CWidgetStatsA
-  title={
-    <span style={{ fontWeight: 'bold', fontSize: '18px' }}>
-      Target Total Revenue
-    </span>
-  }
-  chart={
-    <div style={{ position: 'relative', height: '244px', padding: '25px' }}>
-      {/* Custom styles for chart height and padding */}
-      <CChartDoughnut
-        data={{
-          labels: ['North Central Java', 'South Central Java'],
-          datasets: [
-            {
-              data: [
-                totalRevenueData.totalRevenue.salesDatanorth === null ? 0 : totalRevenueData.totalRevenue.salesDatanorth.toFixed(2),
-                totalRevenueData.totalRevenue.salesDatasouth === null ? 0 : totalRevenueData.totalRevenue.salesDatasouth.toFixed(2)
-              ], // Your actual values for the two regions
-              backgroundColor: ['#FFCE56', '#FF6347'], // Custom colors
-              hoverBackgroundColor: ['#FFC300', '#FF4500'], // Hover effect colors
-              borderWidth: 0, // No border
-            },
-          ],
-        }}
-        options={{
-          maintainAspectRatio: false,
-          cutout: '80%', // Controls the inner circle size
-          plugins: {
-            legend: {
-              display: true,
-              position: 'right', // Display the labels on the right side
-              labels: {
-                usePointStyle: true, // Dot point style for legend items
-                font: {
-                  size: 10, // Adjust font size as needed
-                  weight: 'bold',
+   style={{ height: '290px' }}  // Ensures consistent card height
+    title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>Total Revenue</span>}
+    chart={
+      <div style={{ position: 'relative', height: '250px', padding: '5%' }}>
+        <CChartDoughnut
+        
+          data={{
+            labels: ['North Central Java', 'South Central Java'],
+            datasets: [
+              {
+                data: [
+                  totalRevenueData.totalRevenue.salesDatanorth ?? 0,
+                  totalRevenueData.totalRevenue.salesDatasouth ?? 0,
+                ].map((val) => val.toFixed(2)),
+                backgroundColor: ['#FFCE56', '#FF6347'],
+                hoverBackgroundColor: ['#FFC300', '#FF4500'],
+                borderWidth: 0,
+              },
+            ],
+          }}
+          options={{
+            maintainAspectRatio: false,
+            cutout: '80%',
+            plugins: {
+              legend: {
+                display: true,
+                position: 'right',
+                labels: {
+                  usePointStyle: true,
+                  font: { size: 10, weight: 'bold' },
                 },
               },
+              beforeDraw: function (chart) {
+                const { ctx, width, height } = chart;
+                ctx.save();
+                const totalRevenue = totalRevenueData.totalRevenue.salesDatanorth + totalRevenueData.totalRevenue.salesDatasouth;
+                const percentageNorth = totalRevenue !== 0 && totalRevenueData.totalRevenue.salesDatanorth !== null
+                  ? ((totalRevenueData.totalRevenue.salesDatanorth / totalRevenue) * 100).toFixed(2)
+                  : 0;
+                const percentageSouth = totalRevenue !== 0 && totalRevenueData.totalRevenue.salesDatasouth !== null
+                  ? ((totalRevenueData.totalRevenue.salesDatasouth / totalRevenue) * 100).toFixed(2)
+                  : 0;
+
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = 'bold 1.5em Arial';
+                ctx.fillText(
+                  percentageNorth > percentageSouth ? `${percentageNorth}%` : `${percentageSouth}%`,
+                  width / 2,
+                  height / 2
+                );
+                ctx.restore();
+              },
             },
-            beforeDraw: function (chart) {
-              const { ctx, width, height } = chart;
-              ctx.save();
-              const totalRevenue =
-                totalRevenueData.totalRevenue.salesDatanorth +
-                totalRevenueData.totalRevenue.salesDatasouth;
-                const percentageNorth = 
-                totalRevenue !== 0 && totalRevenueData.totalRevenue.salesDatanorth !== null
-                    ? ((totalRevenueData.totalRevenue.salesDatanorth / totalRevenue) * 100).toFixed(2)
-                    : 0; // You can change 0 to any desired placeholder for when it's null
-            
-            const percentageSouth = 
-                totalRevenue !== 0 && totalRevenueData.totalRevenue.salesDatasouth !== null
-                    ? ((totalRevenueData.totalRevenue.salesDatasouth / totalRevenue) * 100).toFixed(2)
-                    : 0; // Same as above for the South percentage
-            
-      
-              ctx.textAlign = 'center';
-              ctx.textBaseline = 'middle';
-              ctx.font = 'bold 24px Arial';
-              const textX = width / 2;
-              const textY = height / 2;
-      
-              // Draw percentage based on which region is greater
-              if (totalRevenueData.totalRevenue.salesDatanorth > totalRevenueData.totalRevenue.salesDatasouth) {
-                ctx.fillText(percentageNorth + '%', textX, textY);
-              } else {
-                ctx.fillText(percentageSouth + '%', textX, textY);
-              }
-      
-              ctx.restore();
-          },
-        }
-        }
-      }
-      />
-      <div style={{
-        position: 'relative', 
-        top: '-85px', 
-        left: '-60px',
-        textAlign: 'center', 
-        fontWeight: 'bold', 
-        fontSize: '15px'
-      }}>
-       {displayedPercentage === null ? 0 : displayedPercentage.toFixed(2)}%
+          }}
+        />
+        <div
+          style={{
+            position: 'relative',
+            top: '-83px',
+            left: '-60px',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            fontSize: '1em',
+          }}
+        >
+          {displayedPercentage === null ? '0' : `${displayedPercentage.toFixed(2)}%`}
+        </div>
       </div>
-    </div>
-  }
-/>
-<br/>
-
+    }
+  />
+  <br />
 </CCol>
-<CCol sm={6} xl={4} xxl={4}>
-  <CCard className="mb-4" style={{ height: '286px' }}>
-  {/* tradeSupplyMtd, tradeCvmRevMtd,tradeSpMtd,tradeRebuyMtd */}
-    <CCardHeader><b>Trade</b></CCardHeader>
-    <CCardBody>
-      <div style={{ display: 'flex', height: '80%', gap: '5px' }}>
-        {/* Kolom kiri: Trade Supply */}
-        <div style={{ width: '38%', backgroundColor: '#6CC24A', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-          <p style={{ margin: 0,color:'white' }}>Trade Supply</p>
-          <p style={{ margin: 0,color:'white' }}>{formatNumber(totalRevenueData.totalRevenue.tradeSupplyMtd === null ? 0 :totalRevenueData.totalRevenue.tradeSupplyMtd.toFixed(2))}B</p>
-        </div>
-
-        {/* Kolom kanan (atas): Trade Rebuy */}
-        <div style={{ width: '88%', display: 'flex', flexDirection: 'column', gap: '5px' }}>
-          <div style={{ backgroundColor: '#F8D565', height: '80%', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-            <p style={{ margin: 0,color:'white' }}>Trade Rebuy</p>
-            <p style={{ margin: 0 ,color:'white'}}>{formatNumber(totalRevenueData.totalRevenue.tradeRebuyMtd === null ? 0 : totalRevenueData.totalRevenue.tradeRebuyMtd.toFixed(2))}B</p>
-          </div>
-
-          {/* Kolom kanan bawah: Trade Cum Rev dan Trade (kecil) */}
-          <div style={{ display: 'flex', height: '80%', gap: '5px' }}>
-            <div style={{ width: '80%', backgroundColor: '#A8D1F2', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-              <p style={{ margin: 0,color:'white' }}>Trade Cum Rev</p>
-              <p style={{ margin: 0 ,color:'white'}}>{formatNumber(totalRevenueData.totalRevenue.tradeCvmRevMtd === null ? 0 :totalRevenueData.totalRevenue.tradeCvmRevMtd.toFixed(2))}B</p>
-            </div>
-            <div style={{ width: '80%', backgroundColor: '#789C61', textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-              <p style={{ margin: 0,color:'white' }}>Trade SP</p>
-              <p style={{ margin: 0,color:'white' }}>{formatNumber(totalRevenueData.totalRevenue.tradeSpMtd === null ? 0 : totalRevenueData.totalRevenue.tradeSpMtd.toFixed(2))}B</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </CCardBody>
-  </CCard>
+<CCol sm={12} md={6} xl={4}>
+  <CWidgetStatsA
+    title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>Trade</span>}
+    chart={
+      <CChartBar
+        style={{ height: '223px', margin: '2%', marginBottom:'2%' }}
+        data={{
+          labels: ['Trade Supply', 'Trade Rebuy', 'Trade Cum Rev', 'Trade SP'],
+          datasets: [
+            {
+              label: 'Trade Data',
+              data: [
+                totalRevenueData.totalRevenue.tradeSupplyMtd ?? 0,
+                totalRevenueData.totalRevenue.tradeRebuyMtd ?? 0,
+                totalRevenueData.totalRevenue.tradeCvmRevMtd ?? 0,
+                totalRevenueData.totalRevenue.tradeSpMtd ?? 0,
+              ].map((val) => val.toFixed(2)), // Format each value to two decimal places
+              backgroundColor: [
+                'rgba(108, 194, 74, 0.6)',  // Color for Trade Supply
+                'rgba(248, 213, 101, 0.6)', // Color for Trade Rebuy
+                'rgba(168, 209, 242, 0.6)',  // Color for Trade Cum Rev
+                'rgba(120, 156, 97, 0.6)',   // Color for Trade SP
+              ],
+            },
+          ],
+          
+        }}
+        options={{
+          indexAxis: 'x',
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            
+            y: {
+              beginAtZero: true,
+              ticks: {
+                maxTicksLimit: 7,
+                stepSize: Math.ceil(250 / 5),
+              },
+            },
+          },
+        }}
+      />
+    }
+  />
+  <br />
 </CCol>
 
     </CRow>
     <CRow>
-      <CCol sm={6} xl={4} xxl={3}>
-      <CCard className="mb-4">
-        <CCardBody>
-          <div style={{ display: 'flex', alignItems: 'center', padding:'10px 0px 0px 0px' }}>
-            <div style={{ width: '60%', height: '60%' }}>
-              <CChartDoughnut 
-                data={{
-                  labels: [], // Empty array to remove labels
-                  datasets: [{
-                    data: [totalRevenueData.totalRevenue.quromtd === null ? 0 : totalRevenueData.totalRevenue.quromtd.toFixed(2),1-(totalRevenueData.totalRevenue.quromtd === null ? 0 :totalRevenueData.totalRevenue.quromtd.toFixed(2))],
-                    backgroundColor: ['#FFCE56', '#E7E9ED'],
-                  }]
-                }} 
-                options={{ 
-                  maintainAspectRatio: false, 
-                  cutout: '80%',  // Makes the center hollow
-                  plugins: {
-                    legend: { display: false },  // Hides the legend
-                    tooltip: { enabled: false }  // Disables tooltips if unwanted
-                  }
-                }} 
-              />
-                    <div style={{
-                position: 'relative', 
-                top: '-85px', 
-                textAlign: 'center', 
-                fontWeight: 'bold', 
-                fontSize: '15px'
-              }}>
-                {totalRevenueData.totalRevenue.qurogrowth === null ? 0 :totalRevenueData.totalRevenue.qurogrowth.toFixed(2)}%
-              </div>
+  <CCol sm={12} md={6} xl={4} xxl={3}>
+    <CCard className="mb-4">
+      <CCardBody>
+        <div style={{ display: 'flex', alignItems: 'center', padding: '10px 0px 0px 0px' }}>
+          <div style={{ width: '60%', height: '60%' }}>
+            <CChartDoughnut 
+              data={{
+                labels: [], // Empty array to remove labels
+                datasets: [{
+                  data: [
+                    totalRevenueData.totalRevenue.quromtd === null ? 0 : totalRevenueData.totalRevenue.quromtd.toFixed(2),
+                    1 - (totalRevenueData.totalRevenue.quromtd === null ? 0 : totalRevenueData.totalRevenue.quromtd.toFixed(2))
+                  ],
+                  backgroundColor: ['#FFCE56', '#E7E9ED'],
+                }]
+              }} 
+              options={{ 
+                maintainAspectRatio: false, 
+                cutout: '80%',  // Makes the center hollow
+                plugins: {
+                  legend: { display: false },  // Hides the legend
+                  tooltip: { enabled: false }  // Disables tooltips if unwanted
+                }
+              }} 
+            />
+            <div style={{
+              position: 'relative', 
+              top: '-85px', 
+              textAlign: 'center', 
+              fontWeight: 'bold', 
+              fontSize: '15px'
+            }}>
+              {totalRevenueData.totalRevenue.qurogrowth === null ? 0 : totalRevenueData.totalRevenue.qurogrowth.toFixed(2)}%
             </div>
-            <div style={{ paddingLeft: '20px', fontSize:'12px' }}>
-              <h6>Quro</h6>
-              <p>{totalRevenueData.totalRevenue.quromtd === null ? 0 :totalRevenueData.totalRevenue.quromtd.toFixed(2)}<br/>Month To Date</p>
-
-            </div>
-
           </div>
-        </CCardBody>
-      </CCard>
-        <br/>
-       
+          <div style={{ paddingLeft: '20px', fontSize: '12px' }}>
+            <h6>Quro</h6>
+            <p>{totalRevenueData.totalRevenue.quromtd === null ? 0 : totalRevenueData.totalRevenue.quromtd.toFixed(2)}<br/>Month To Date</p>
+          </div>
+        </div>
+      </CCardBody>
+    </CCard>
+    <br />
         
-      <CCard className="mb-5">
-        <CCardBody>
-          <div style={{ display: 'flex', alignItems: 'center', padding:'10px 0px 0px 0px' }}>
-            <div style={{ width: '60%', height: '100%' }}>
-              <CChartDoughnut 
-                data={{
-                  labels: [], // Empty array to remove labels
-                  datasets: [{
-                    data: [totalRevenueData.totalRevenue.qssomtd === null ? 0 :totalRevenueData.totalRevenue.qssomtd.toFixed(2), 1-(totalRevenueData.totalRevenue.qssomtd === null ? 0 :totalRevenueData.totalRevenue.qssomtd.toFixed(2))],
-                    backgroundColor: ['#FFCE56', '#E7E9ED'],
-                  }]
-                }} 
-                options={{ 
-                  maintainAspectRatio: false, 
-                  cutout: '80%',  // Makes the center hollow
-                  plugins: {
-                    legend: { display: false },  // Hides the legend
-                    tooltip: { enabled: false }  // Disables tooltips if unwanted
-                  }
-                }} 
-              />
-                    <div style={{
-                position: 'relative', 
-                top: '-85px', 
-                textAlign: 'center', 
-                fontWeight: 'bold', 
-                fontSize: '15px'
-              }}>
-                {totalRevenueData.totalRevenue.qssogrowth === null ? 0 :totalRevenueData.totalRevenue.qssogrowth.toFixed(2)}%
-              </div>
+    <CCard className="mb-5">
+      <CCardBody>
+        <div style={{ display: 'flex', alignItems: 'center', padding: '10px 0px 0px 0px' }}>
+          <div style={{ width: '60%', height: '100%' }}>
+            <CChartDoughnut 
+              data={{
+                labels: [], // Empty array to remove labels
+                datasets: [{
+                  data: [
+                    totalRevenueData.totalRevenue.qssomtd === null ? 0 : totalRevenueData.totalRevenue.qssomtd.toFixed(2),
+                    1 - (totalRevenueData.totalRevenue.qssomtd === null ? 0 : totalRevenueData.totalRevenue.qssomtd.toFixed(2))
+                  ],
+                  backgroundColor: ['#FFCE56', '#E7E9ED'],
+                }]
+              }} 
+              options={{ 
+                maintainAspectRatio: false, 
+                cutout: '80%',  // Makes the center hollow
+                plugins: {
+                  legend: { display: false },  // Hides the legend
+                  tooltip: { enabled: false }  // Disables tooltips if unwanted
+                }
+              }} 
+            />
+            <div style={{
+              position: 'relative', 
+              top: '-85px', 
+              textAlign: 'center', 
+              fontWeight: 'bold', 
+              fontSize: '15px'
+            }}>
+              {totalRevenueData.totalRevenue.qssogrowth === null ? 0 : totalRevenueData.totalRevenue.qssogrowth.toFixed(3)}%
             </div>
-            <div style={{ paddingLeft: '20px', fontSize:'12px' }}>
-              <h6>QSSO</h6>
-              <p>{totalRevenueData.totalRevenue.qssomtd === null ? 0 : totalRevenueData.totalRevenue.qssomtd.toFixed(2)}<br/>Month To Date</p>
-            </div>
-
           </div>
-        </CCardBody>
-      
-      </CCard>
-      </CCol>
-      <CCol sm={12} xl={10} xxl={9}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div style={{ width: '100%' }}>
-                        <CCard className="mb-4">
-                          <CCardBody>
-                            <CRow>
-                              <CCol >
-                                <h5 id="traffic" className="card-title mb-0">
-                                  <b>Revenue By Branch</b>
-                                </h5>   
-                              </CCol>
-                            </CRow> 
-                            <MainChart selectedDate={selectedDate} key={selectedDate} /> {/* Gunakan key */}
-                          </CCardBody>
-                          <CCardFooter>
-                            <CRow
-                            sm={9} xl={6} xxl={5}
-                              className="mb-8 text-center justify-content-center align-items-center"
-                            >
-                              {progressExample.map((item, index, items) => (
-                                <CCol
-                                  className={classNames({
-                                    'd-none d-xl-block': index + 1 === items.length, 
-                                  })}
-                                  key={index}
-                                >
-                                  <div style={{ fontSize: '18px' }} className="text-body-secondary">{item.title}</div>
-                                  <div  style={{ fontSize: '16px' }} className="fw-semibold text-truncate">
-                                    {item.value} 
-                                  </div>
-                                  <div style={{ fontSize: '18px' }} className="text-body-secondary">{item.city}</div>
-                                  {/* <CProgress thin className="mt-2" color={item.color} value={item.percent} /> */}
-                                </CCol>
-                              ))}
-                            </CRow>
-                          </CCardFooter>
-                        </CCard>
-                      </div>
-              </div>
-      </CCol>
-    </CRow>
+          <div style={{ paddingLeft: '20px', fontSize: '12px' }}>
+            <h6>QSSO</h6>
+            <p>{totalRevenueData.totalRevenue.qssomtd === null ? 0 : totalRevenueData.totalRevenue.qssomtd.toFixed(2)}<br/>Month To Date</p>
+          </div>
+        </div>
+      </CCardBody>
+    </CCard>
+  </CCol>
+
+  <CCol sm={12} md={12} xl={10} xxl={9}>
+    <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
+      <div style={{ width: '100%' }}>
+        <CCard className="mb-4">
+          <CCardBody>
+            <CRow>
+              <CCol>
+                <h5 id="traffic" className="card-title mb-0">
+                  <b>Revenue By Branch</b>
+                </h5>
+              </CCol>
+            </CRow>
+            <MainChart selectedDate={selectedDate} key={selectedDate} /> {/* Use key to ensure chart updates */}
+          </CCardBody>
+         
+          <CCardFooter>
+            <CRow className="mb-8 text-center justify-content-center align-items-center">
+              {progressExample.map((item, index) => (
+                <CCol
+                  xs={12} // Stack vertically on extra small screens
+                  sm={4}  // Three items per row on small screens
+                  className="mb-4" // Add bottom margin for spacing
+                  key={index}
+                >
+                  <div style={{ fontSize: '18px' }} className="text-body-secondary">{item.title}</div>
+                  <div style={{ fontSize: '16px' }} className="fw-semibold text-truncate">
+                    {item.value}
+                  </div>
+                  <div style={{ fontSize: '18px' }} className="text-body-secondary">{item.city}</div>
+                </CCol>
+              ))}
+            </CRow>
+</CCardFooter>
+
+        </CCard>
+      </div>
+    </div>
+  </CCol>
+</CRow>
+
+
     </>
   )
 }
