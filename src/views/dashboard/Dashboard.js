@@ -702,7 +702,7 @@ const Dashboard = () => {
               fontWeight: 'bold', 
               fontSize: '15px'
             }}>
-              {totalRevenueData.totalRevenue.qurogrowth === null ? 0 : totalRevenueData.totalRevenue.qurogrowth.toFixed(2)}%
+              {totalRevenueData.totalRevenue.qurogrowth === null ? 0 : totalRevenueData.totalRevenue.qurogrowth.toFixed(3)}%
             </div>
           </div>
           <div style={{ paddingLeft: '20px', fontSize: '12px' }}>
@@ -745,7 +745,7 @@ const Dashboard = () => {
               fontWeight: 'bold', 
               fontSize: '15px'
             }}>
-              {totalRevenueData.totalRevenue.qssogrowth === null ? 0 : totalRevenueData.totalRevenue.qssogrowth.toFixed(3)}%
+              {totalRevenueData.totalRevenue.qssogrowth === null ? 0 : totalRevenueData.totalRevenue.qssogrowth.toFixed(2)}%
             </div>
           </div>
           <div style={{ paddingLeft: '20px', fontSize: '12px' }}>
