@@ -253,6 +253,7 @@ const Dashboard = () => {
   <CCol xs={12} sm={6} lg={4} xl={3}>
     <SortSales onDateChange={handleDateChange} />
     <CWidgetStatsA
+    style={{ minHeight: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
       chart={
         <div style={{ padding: '0px 10px 20px', position: 'relative' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
@@ -293,6 +294,7 @@ const Dashboard = () => {
 
   <CCol xs={12} sm={6} lg={4} xl={3}>
   <CWidgetStatsA
+  style={{ minHeight: '272px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
     title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>RGU GA</span>}
     chart={
       <div style={{ padding: '5% 0', height: '100%' }}>
@@ -359,6 +361,7 @@ const Dashboard = () => {
 
 <CCol xs={12} sm={6} lg={4} xl={3}>
   <CWidgetStatsA
+  style={{ minHeight: '272px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
     title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>VLR</span>}
     chart={
       <div style={{ padding: '5% 0', height: '100%' }}>
@@ -425,6 +428,7 @@ const Dashboard = () => {
 
 <CCol xs={12} sm={6} lg={4} xl={3}>
         <CWidgetStatsA
+        style={{ minHeight: '272px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
           title={<span style={{ fontWeight: 'bold', fontSize: '18px' }}>Subscriber</span>}
           chart={
             <div style={{ padding: '28px', position: 'relative' }}> 
@@ -491,58 +495,61 @@ const Dashboard = () => {
 
       <br/>
 <CRow className="gx-3 gy-4">
-  <CCol sm={12} xl={6} xxl={4}>
-        <CWidgetStatsA
-          title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>Revenue</span>}
-          chart={
-             
-              <CChartBar
-                      ref={chartRef}
-                      style={{ height: '228px', margin: '2%' }}
-                      data={{
-                        labels: ['Data', 'Mobo', 'Organic', 'Mobo Trade', 'Mobo Non-trade', 'Vas'],
-                        datasets: [
-                          {
-                            label: 'Revenue',
-                            data: [
-                              totalRevenueData.totalRevenue.dataRevMtd ?? 0,
-                              totalRevenueData.totalRevenue.moboMtd ?? 0,
-                              totalRevenueData.totalRevenue.orgRevMtd ?? 0,
-                              totalRevenueData.totalRevenue.moboTradeMtd ?? 0,
-                              totalRevenueData.totalRevenue.moboNonTradeMtd ?? 0,
-                              totalRevenueData.totalRevenue.vasRevMtd ?? 0,
-                            ].map((val) => val.toFixed(2)),
-                            backgroundColor: [
-                              'rgba(75, 192, 192, 0.6)',
-                              'rgba(255, 99, 132, 0.6)',
-                              'rgba(54, 162, 235, 0.6)',
-                              'rgba(255, 206, 86, 0.6)',
-                              'rgba(75, 192, 192, 0.6)',
-                              'rgba(153, 102, 255, 0.6)',
-                            ],
-                          },
-                        ],
-                      }}
-                      options={{
-                        indexAxis: 'y',
-                        plugins: {
-                          legend: { display: false },
-                        },
-                        scales: {
-                          y: {
-                            beginAtZero: true,
-                            ticks: {
-                              maxTicksLimit: 7,
-                              stepSize: Math.ceil(250 / 5),
-                            },
-                          },
-                        },
-                      }}
-                    />
-          }
-        />
+<CCol sm={12} xl={6} xxl={4} style={{ display: 'flex', flexDirection: 'column' }}>
+  <CWidgetStatsA
+    style={{ flex: '1', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',padding: '20px' }}
+    title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>Revenue</span>}
+    chart={
+      <CChartBar
+        ref={chartRef}
+        style={{ width: '100%', height: '100%', flex: '1' }}
+        data={{
+          labels: ['Data', 'Mobo', 'Organic', 'Mobo Trade', 'Mobo Non-trade', 'Vas'],
+          datasets: [
+            {
+              label: 'Revenue',
+              data: [
+                totalRevenueData.totalRevenue.dataRevMtd ?? 0,
+                totalRevenueData.totalRevenue.moboMtd ?? 0,
+                totalRevenueData.totalRevenue.orgRevMtd ?? 0,
+                totalRevenueData.totalRevenue.moboTradeMtd ?? 0,
+                totalRevenueData.totalRevenue.moboNonTradeMtd ?? 0,
+                totalRevenueData.totalRevenue.vasRevMtd ?? 0,
+              ].map((val) => val.toFixed(2)),
+              backgroundColor: [
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(153, 102, 255, 0.6)',
+              ],
+            },
+          ],
+        }}
+        options={{
+          maintainAspectRatio: false, // Membuat chart menyesuaikan ukuran
+          responsive: true,
+          indexAxis: 'y',
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                maxTicksLimit: 7,
+                stepSize: Math.ceil(250 / 5),
+              },
+            },
+          },
+        }}
+      />
+    }
+  />
   <br />
 </CCol>
+
 
 <CCol sm={12} md={6} xl={4}>
   <CWidgetStatsA
@@ -669,7 +676,7 @@ const Dashboard = () => {
 </CCol>
 
     </CRow>
-    <CRow>
+    <CRow >
   <CCol sm={12} md={6} xl={4} xxl={3}>
     <CCard className="mb-4">
       <CCardBody>
@@ -702,7 +709,7 @@ const Dashboard = () => {
               fontWeight: 'bold', 
               fontSize: '15px'
             }}>
-              {totalRevenueData.totalRevenue.qurogrowth === null ? 0 : totalRevenueData.totalRevenue.qurogrowth.toFixed(3)}%
+              {(Math.ceil(Math.abs(totalRevenueData.totalRevenue.qurogrowth ?? 0) * 100) / 100).toFixed(2)}%
             </div>
           </div>
           <div style={{ paddingLeft: '20px', fontSize: '12px' }}>
@@ -745,7 +752,7 @@ const Dashboard = () => {
               fontWeight: 'bold', 
               fontSize: '15px'
             }}>
-              {totalRevenueData.totalRevenue.qssogrowth === null ? 0 : totalRevenueData.totalRevenue.qssogrowth.toFixed(2)}%
+              {(Math.ceil(Math.abs(totalRevenueData.totalRevenue.qssogrowth ?? 0) * 100) / 100).toFixed(2)}%
             </div>
           </div>
           <div style={{ paddingLeft: '20px', fontSize: '12px' }}>
@@ -757,45 +764,43 @@ const Dashboard = () => {
     </CCard>
   </CCol>
 
-  <CCol sm={12} md={12} xl={10} xxl={9}>
-    <div style={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'column' }}>
-      <div style={{ width: '100%' }}>
-        <CCard className="mb-4">
-          <CCardBody>
-            <CRow>
-              <CCol>
-                <h5 id="traffic" className="card-title mb-0">
-                  <b>Revenue By Branch</b>
-                </h5>
+  <CCol sm={12} md={12} xl={8} xxl={9}>
+    <div className="revenue-container">
+      <CCard className="mb-4">
+        <CCardBody>
+          <CRow>
+            <CCol>
+              <h5 id="traffic" className="card-title mb-0">
+                <b>Revenue By Branch</b>
+              </h5>
+            </CCol>
+          </CRow>
+          <MainChart selectedDate={selectedDate} key={selectedDate} /> {/* Use key to ensure chart updates */}
+        </CCardBody>
+       
+        <CCardFooter>
+          <CRow className="mb-8 text-center justify-content-center align-items-center">
+            {progressExample.map((item, index) => (
+              <CCol
+                xs={12} // Stack vertically on extra small screens
+                sm={4}  // Three items per row on small screens
+                className="mb-4" // Add bottom margin for spacing
+                key={index}
+              >
+                <div style={{ fontSize: '18px' }} className="text-body-secondary">{item.title}</div>
+                <div style={{ fontSize: '16px' }} className="fw-semibold text-truncate">
+                  {item.value}
+                </div>
+                <div style={{ fontSize: '18px' }} className="text-body-secondary">{item.city}</div>
               </CCol>
-            </CRow>
-            <MainChart selectedDate={selectedDate} key={selectedDate} /> {/* Use key to ensure chart updates */}
-          </CCardBody>
-         
-          <CCardFooter>
-            <CRow className="mb-8 text-center justify-content-center align-items-center">
-              {progressExample.map((item, index) => (
-                <CCol
-                  xs={12} // Stack vertically on extra small screens
-                  sm={4}  // Three items per row on small screens
-                  className="mb-4" // Add bottom margin for spacing
-                  key={index}
-                >
-                  <div style={{ fontSize: '18px' }} className="text-body-secondary">{item.title}</div>
-                  <div style={{ fontSize: '16px' }} className="fw-semibold text-truncate">
-                    {item.value}
-                  </div>
-                  <div style={{ fontSize: '18px' }} className="text-body-secondary">{item.city}</div>
-                </CCol>
-              ))}
-            </CRow>
-</CCardFooter>
-
-        </CCard>
-      </div>
+            ))}
+          </CRow>
+        </CCardFooter>
+      </CCard>
     </div>
   </CCol>
 </CRow>
+
 
 
     </>
