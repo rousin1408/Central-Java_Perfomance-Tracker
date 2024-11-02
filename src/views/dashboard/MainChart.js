@@ -10,8 +10,8 @@ const MainChart = ({ selectedDate }) => {
     datasets: [
       {
         label: 'Average Revenue',
-        backgroundColor: `rgba(${getStyle('--cui-info-rgb')}, .1)`,
-        borderColor: getStyle('--cui-info'),
+        backgroundColor: `rgba(255, 206, 86, 0.1)`,
+        borderColor:'#FFCE56',
         pointHoverBackgroundColor: getStyle('--cui-info'),
         borderWidth: 2,
         data: [], // Initially empty, will be populated on data fetch
