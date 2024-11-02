@@ -107,9 +107,10 @@ const Dashboard = () => {
   // tradeSupplyMtd, tradeCvmRevMtd,tradeSpMtd,tradeRebuyMtd
   const southPercentage = totalRevenueData.totalRevenue.salesDatasouth / totalSales * 100;
   const northPercentage = totalRevenueData.totalRevenue.salesDatanorth / totalSales * 100;
-  const displayedPercentage = totalRevenueData.totalRevenue.salesDatasouth > totalRevenueData.totalRevenue.salesDatanorth 
-        ? southPercentage 
-        : northPercentage;
+  const displayedPercentage = (totalRevenueData.totalRevenue.salesDatanorth === 0 && totalRevenueData.totalRevenue.salesDatasouth === 0)
+  ? 0  // If both are 0, set displayedPercentage to 0
+  : (totalRevenueData.totalRevenue.salesDatasouth > totalRevenueData.totalRevenue.salesDatanorth ? southPercentage : northPercentage);
+
   const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (date) => {
@@ -435,7 +436,7 @@ const Dashboard = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1px 1fr' }}>
                     <div style={{ textAlign: 'center', margin: '5px' }}>
                         <div>Net Add 30D</div>
-                        <div style={{ color: 'red', fontWeight: 'Bold' }}>({Math.round(totalRevenueData.totalRevenue.net30)})</div>
+                        <div style={{ color: 'red', fontWeight: 'Bold' }}>{Math.round(totalRevenueData.totalRevenue.net30)}</div>
                     </div>
 
                     <div style={{
@@ -447,7 +448,7 @@ const Dashboard = () => {
 
                     <div style={{ textAlign: 'center', margin: '5px' }}>
                         <div>Net Add 90D</div>
-                        <div style={{ color: 'red', fontWeight: 'Bold' }}>({Math.round(totalRevenueData.totalRevenue.net90)})</div>
+                        <div style={{ color: 'red', fontWeight: 'Bold' }}>{Math.round(totalRevenueData.totalRevenue.net90)}</div>
                     </div>
 
                     <div style={{
@@ -616,7 +617,7 @@ const Dashboard = () => {
               fontSize: '1em',
             }}
           >
-            {displayedPercentage === null ? '0' : `${displayedPercentage.toFixed(2)}%`}
+            {displayedPercentage == null || isNaN(displayedPercentage) ? '0.00%' : `${displayedPercentage.toFixed(2)}%`}
           </div>
         </div>
       }
@@ -625,58 +626,60 @@ const Dashboard = () => {
   </CCol>
 
   <CCol xs={12} md={6} xl={4} style={{ display: 'flex', flexDirection: 'column' }}>
-    <CWidgetStatsA
-      title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>Trade</span>}
-      chart={
-        <CChartBar
-          style={{ height: '223px', margin: '2%', marginBottom: '2%' }}
-          data={{
-            labels: ['Trade Supply', 'Trade Rebuy', 'Trade Cum Rev', 'Trade SP'],
-            datasets: [
-              {
-                label: 'Trade Data',
-                data: [
-                  totalRevenueData.totalRevenue.tradeSupplyMtd ?? 0,
-                  totalRevenueData.totalRevenue.tradeRebuyMtd ?? 0,
-                  totalRevenueData.totalRevenue.tradeCvmRevMtd ?? 0,
-                  totalRevenueData.totalRevenue.tradeSpMtd ?? 0,
-                ].map((val) => val.toFixed(2)),
-                backgroundColor: [
-                  'rgba(255, 100, 0, 0.6)',   // Kuning Cerah
-                  'rgba(238, 28, 37, 0.6)',   // Merah Cerah
-                  'rgba(255, 206, 86, 0.6)',
-                  'rgba(255, 255, 0, 0.6)',   // Kuning Emas
-                ],
-              },
-            ],
-          }}
-          options={{
-            indexAxis: 'y',
-            plugins: {
-              legend: { display: false },
+  <CWidgetStatsA
+    title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>Trade</span>}
+    chart={
+      <CChartBar
+        style={{ height: '223px', margin: '2%', marginBottom: '2%' }}
+        data={{
+          labels: ['Trade Supply', 'Trade Rebuy', 'Trade Cum Rev', 'Trade SP'],
+          datasets: [
+            {
+              label: 'Trade Data',
+              data: [
+                totalRevenueData.totalRevenue.tradeSupplyMtd ?? 0,
+                totalRevenueData.totalRevenue.tradeRebuyMtd ?? 0,
+                totalRevenueData.totalRevenue.tradeCvmRevMtd ?? 0,
+                totalRevenueData.totalRevenue.tradeSpMtd ?? 0,
+              ].map((val) => val.toFixed(2)),
+              backgroundColor: [
+                'rgba(255, 100, 0, 0.6)',   // Kuning Cerah
+                'rgba(238, 28, 37, 0.6)',   // Merah Cerah
+                'rgba(255, 206, 86, 0.6)',
+                'rgba(255, 255, 0, 0.6)',   // Kuning Emas
+              ],
             },
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  maxTicksLimit: 7,
-                  stepSize: Math.ceil(250 / 5),
-                },
+          ],
+        }}
+        options={{
+          maintainAspectRatio: false, // Prevent resizing when maximizing
+          indexAxis: 'y',
+          plugins: {
+            legend: { display: false },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                maxTicksLimit: 7,
+                stepSize: Math.ceil(250 / 5),
               },
             },
-          }}
-        />
-      }
-    />
-    <br />
-  </CCol>
+          },
+        }}
+      />
+    }
+  />
+  <br />
+</CCol>
+
 </CRow>
 
 
 
 <CRow>
   <CCol sm={12} md={6} xl={4} xxl={3}>
-    <CCard className="mb-4" style={{ flex: '1 1 0%', maxWidth: '100%' }}>
+    <CCard className="mb-4" style={{ flex: '1 1 0%', maxWidth: '100%', minWidth: '200px', paddingBottom:'11px' }}> {/* Added minWidth */}
       <CCardBody>
         <div style={{ display: 'flex', alignItems: 'center', padding: '10px 0px 0px 0px' }}>
           <div style={{ width: '60%', height: '60%' }}>
@@ -711,15 +714,15 @@ const Dashboard = () => {
             </div>
           </div>
           <div style={{ paddingLeft: '20px', fontSize: '12px' }}>
-            <h6>Quro</h6>
+            <h6>QURO</h6>
             <p>{totalRevenueData.totalRevenue.quromtd === null ? 0 : totalRevenueData.totalRevenue.quromtd.toFixed(2)}<br/>Month To Date</p>
           </div>
         </div>
       </CCardBody>
     </CCard>
-    <br />
 
-    <CCard className="mb-5" style={{ flex: '1 1 0%', maxWidth: '100%' }}>
+
+    <CCard className="mb-5" style={{ flex: '1 1 0%', maxWidth: '100%', minWidth: '200px', paddingBottom:'11px' }}> {/* Added minWidth */}
       <CCardBody>
         <div style={{ display: 'flex', alignItems: 'center', padding: '10px 0px 0px 0px' }}>
           <div style={{ width: '60%', height: '100%' }}>
@@ -762,7 +765,7 @@ const Dashboard = () => {
     </CCard>
   </CCol>
 
-  <CCol sm={12} md={12} xl={8} xxl={9} style={{ maxWidth: '110%', flex: '1 1 auto' }}>
+  <CCol sm={12} md={12} xl={8} xxl={9} style={{ maxWidth: '110%', flex: '1 1 auto', minWidth: '200px' }}> {/* Added minWidth */}
     <div className="revenue-container">
       <CCard className="mb-4">
         <CCardBody>
@@ -776,7 +779,7 @@ const Dashboard = () => {
           <MainChart selectedDate={selectedDate} key={selectedDate} /> {/* Use key to ensure chart updates */}
         </CCardBody>
        
-        <CCardFooter>
+        <CCardFooter style={{ paddingBottom: '-10px' }}>
           <CRow className="mb-8 text-center justify-content-center align-items-center">
             {progressExample.map((item, index) => (
               <CCol
@@ -798,6 +801,8 @@ const Dashboard = () => {
     </div>
   </CCol>
 </CRow>
+
+
 
 
 
