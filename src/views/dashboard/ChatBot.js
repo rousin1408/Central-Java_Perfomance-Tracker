@@ -62,7 +62,7 @@ const ChatBot = () => {
                   value={userInput} 
                   onChange={(e) => setUserInput(e.target.value)} 
                   placeholder="Type your message..." 
-                  rows={4} // Mengatur tinggi textarea
+                  rows={4} // Set height of textarea
                   style={{ fontSize: '1rem' }} 
                 />
                 <div className="mt-2" style={{ textAlign: 'center' }}>
@@ -81,9 +81,17 @@ const ChatBot = () => {
             {/* Chat History Display */}
             <div className="mt-4">
               {chatHistory.map((chat, index) => (
-                <div key={index} style={{ marginBottom: '10px' }}>
-                  <div><strong>User :</strong> {chat.user}</div>
-                  <div><strong>Autobot - Team 4 :</strong> {chat.bot}</div>
+                <div key={index} style={{ marginBottom: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', width: '100%', marginBottom: '5px' }}>
+                    <div className="user-message" style={{ backgroundColor: '#e1f5fe', padding: '10px', borderRadius: '10px', maxWidth: '60%', textAlign: 'right' }}>
+                      <strong>User :</strong> {chat.user}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'flex-start', width: '100%', marginBottom: '5px' }}>
+                    <div className="bot-message" style={{ backgroundColor: '#f0f4c3', padding: '10px', borderRadius: '10px', maxWidth: '80%', textAlign: 'center' }}>
+                      <strong>Autobot - Team 4 :</strong> {chat.bot}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
