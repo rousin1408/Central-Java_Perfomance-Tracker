@@ -27,13 +27,17 @@ const ChatBot = () => {
       return;
     }
 
+    const payload = { query: userInput };
+
     try {
       setLoading(true);
-      const response = await axios.post(import.meta.env.VITE_API_URL + '/chat', { message: userInput });
+      const response = await axios.post(import.meta.env.VITE_API_AUTOBOT + '/run_query/', payload);
 
-      // Update chat history with user's message and bot's response
-      setChatHistory((prev) => [...prev, { user: userInput, bot: response.data.reply }]);
-      setUserInput(''); // Clear user input
+      const botReply = response.data.response.output;
+      const userMessage = response.data.response.input;
+
+      setChatHistory((prev) => [...prev, { user: userMessage, bot: botReply }]);
+      setUserInput('');
 
     } catch (error) {
       console.error('Error sending message:', error);
@@ -78,8 +82,8 @@ const ChatBot = () => {
             <div className="mt-4">
               {chatHistory.map((chat, index) => (
                 <div key={index} style={{ marginBottom: '10px' }}>
-                  <div><strong>User:</strong> {chat.user}</div>
-                  <div><strong>Bot:</strong> {chat.bot}</div>
+                  <div><strong>User :</strong> {chat.user}</div>
+                  <div><strong>Autobot - Team 4 :</strong> {chat.bot}</div>
                 </div>
               ))}
             </div>
