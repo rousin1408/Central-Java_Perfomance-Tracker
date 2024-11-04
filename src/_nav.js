@@ -12,7 +12,8 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
-  cilCloudDownload
+  cilCloudDownload,
+  cibProbot
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -22,6 +23,15 @@ const _nav = [
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
+    badge: {
+      color: 'info'
+    },
+  },
+  {
+    component: CNavItem,
+    name: 'ChatBot',
+    to: '/ChatBot',
+    icon: <CIcon icon={cibProbot} customClassName="nav-icon" />,
     badge: {
       color: 'info'
     },

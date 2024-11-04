@@ -4,6 +4,7 @@ const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
 const UploadCSV = React.lazy(() => import('./views/dashboard/UploadCSV'))
+const ChatBot = React.lazy(() => import('./views/dashboard/ChatBot'))
 const SortSales = React.lazy(() => import('./views/dashboard/SortSales'))
 
 // Base
@@ -57,6 +58,7 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/UploadCSV', name: 'UploadCSV', element: UploadCSV },
+  { path: '/ChatBot', name: 'ChatBot', element: ChatBot},
   { path: '/SortSales', name: 'SortSales', element: SortSales },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
