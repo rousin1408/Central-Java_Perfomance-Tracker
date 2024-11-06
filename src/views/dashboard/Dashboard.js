@@ -19,6 +19,10 @@ import {
   CTableHeaderCell,
   CTableRow,
   CWidgetStatsA,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+CDropdownItem
 } from '@coreui/react'
 import { CChartBar, CChartDoughnut, CChartLine } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
@@ -78,8 +82,8 @@ const Dashboard = () => {
   const chartRef = useRef(null);
   const [totalRevenueData, setTotalRevenueData] = useState({
     totalRevenue: { dailyssogrowth: 0, dailyurogrowth: 0,
-      qurogrowth:0,quromtd:0,
-      qssogrowth:0,qssomtd:0,
+      qurogrowth:0,quromtd:0,qurolmtd:0,
+      qssogrowth:0,qssomtd:0,qssolmtd:0,
       moboMtd: 0, dataRevMtd: 0, vasRevMtd: 0, 
       moboTradeMtd: 0, moboNonTradeMtd: 0, orgRevMtd: 0 
       ,salesDatanorth:0,salesDatasouth:0,
@@ -94,7 +98,7 @@ const Dashboard = () => {
       net30: 0, net90: 0,
       churn30: 0, churn90: 0,
       totRevGrowth:0, vltGrowth:0,
-     rgu90Growth:0
+     rgu90Growth:0, city:0
        },
   });
   const progressExample = [
@@ -112,7 +116,11 @@ const Dashboard = () => {
   : (totalRevenueData.totalRevenue.salesDatasouth > totalRevenueData.totalRevenue.salesDatanorth ? southPercentage : northPercentage);
 
   const [selectedDate, setSelectedDate] = useState(null);
-
+  const [CityRGU,setCityRGU]= useState(null);
+  const [CityVLR, setCityVLR]= useState(null);
+  const [CityQuro,setCityQuro]= useState(null);
+  const [CityQSSO, setCityQSSO]= useState(null);
+  const [salesAreas, setSalesAreas] = useState([]);
   const handleDateChange = (date) => {
           setSelectedDate(date);
         };
@@ -152,7 +160,10 @@ const Dashboard = () => {
 
     const fetchData = async () => {
       try {
-       
+        const cityUrl = import.meta.env.VITE_API_URL+'/city';
+        const responsecity = await axios.get(cityUrl);
+        const areas = responsecity.data.map((item) => item.salesArea);
+
         const secondUrl = selectedDate
         ? import.meta.env.VITE_API_URL +'/SecondColumn?created_at='+selectedDate
         : import.meta.env.VITE_API_URL +'/SecondColumn?created_at='+formattedToday;
@@ -188,6 +199,56 @@ const Dashboard = () => {
         : import.meta.env.VITE_API_URL +'/TopColumn?created_at='+formattedToday;
         const responses = await axios.get(responseapi);
         const salesDatas = responses.data;
+
+
+        const averageUrl = 
+        CityRGU && selectedDate 
+          ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + selectedDate + '&sales_area=' + CityRGU
+          : CityRGU 
+            ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + formattedToday + '&sales_area=' + CityRGU
+            : selectedDate 
+              ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + selectedDate + '&sales_area=null'
+              : import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + formattedToday + '&sales_area=null';      
+        const responserguga = await axios.get(averageUrl);
+        const responhasilrgu= responserguga.data;
+
+
+        const averageVLR = 
+        CityVLR && selectedDate
+          ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + selectedDate + '&sales_area=' + CityVLR
+          : CityVLR
+            ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + formattedToday + '&sales_area=' + CityVLR
+            : selectedDate
+              ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + selectedDate + '&sales_area=null'
+              : import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + formattedToday + '&sales_area=null';
+      
+      const responseVLR = await axios.get(averageVLR);
+      const responhasilvlr= responseVLR.data;
+
+
+
+      const quroUrl = 
+      CityQuro&& selectedDate 
+        ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=' + CityQuro
+        : CityQuro 
+          ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=' + CityQuro
+          : selectedDate 
+            ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=null'
+            : import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=null';      
+      const responsequro = await axios.get(quroUrl);
+      const responhasilquro= responsequro.data;
+
+      const qssoUrl = 
+      CityQSSO&& selectedDate 
+        ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=' + CityQSSO
+        : CityQSSO 
+          ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=' + CityQSSO
+          : selectedDate 
+            ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=null'
+            : import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=null';      
+      const responseqsso = await axios.get(qssoUrl);
+      const responhasilqsso= responseqsso.data;
+
         // Assuming the response is structured like:
         // { totRevLmtd: number, totRevGrowth: number }
         if (!Array.isArray(highestData)) {
@@ -204,10 +265,12 @@ const Dashboard = () => {
             dailyssogrowth: salesData.dailySsoGrowth,
             dailyurogrowth: salesData.dailyUroGrowth,
             mtd: salesData.totRevMtd,
-            qurogrowth:salesData.quroGrowth,
-            quromtd:salesData.quroMtd,
-            qssogrowth:salesData.qssoGrowth,
-            qssomtd:salesData.qssoMtd,
+            qurogrowth:responhasilquro.quroGrowth,
+            quromtd:responhasilquro.quroMtd,
+            qurolmtd:responhasilquro.quroLmtd,
+            qssogrowth:responhasilqsso.qssoGrowth,
+            qssomtd:responhasilqsso.qssoMtd,
+            qssolmtd:responhasilqsso.qssoLmtd,
             moboMtd: salesData.moboMtd, // Replace with the actual field names from the backend
             dataRevMtd: salesData.dataRevMtd,
             vasRevMtd: salesData.vasRevMtd,
@@ -225,78 +288,128 @@ const Dashboard = () => {
             labelslowest : lowestData.map(item => item.salesArea),
             revenueslowest: lowestData.map(item => item.averageRevenue),
             lmtd: salesDatas.totRevLmtd,
-            vlrlmtd: salesDatas.vlrLmtd,
-            vlrmtd: salesDatas.vlrMtd,
-            rgu90lmtd: salesDatas.rgu90Lmtd,
-            rgu90mtd: salesDatas.rgu90Mtd,
+            vlrlmtd: responhasilvlr.vlrLmtd,
+            vlrmtd: responhasilvlr.vlrMtd,
+            rgu90lmtd: responhasilrgu.rgu90Lmtd,
+            rgu90mtd: responhasilrgu.rgu90Mtd,
             net30: salesDatas.netAdd30d,
             net90:salesDatas.netAdd90d,
             churn30:salesDatas.grossMtdChurn30d,
             churn90:salesDatas.grossMtdChurn90d,
             totRevGrowth:salesDatas.totRevGrowth,
-            rgu90Growth:salesDatas.rgu90Growth,
-            vltGrowth:salesDatas.vlrGrowth,
+            rgu90Growth:responhasilrgu.rgu90Growth,
+            vltGrowth:responhasilvlr.vlrGrowth,
           },
         };
-
+console.log(responhasilrgu.rgu90Growth);
+        setSalesAreas(areas);
         setTotalRevenueData(totalRevenueData);
+        
       } catch (error) {
         console.error('Error fetching sales data:', error);
       }
     };
 
     fetchData();
-  },[selectedDate])
+  },[selectedDate,CityVLR, CityRGU,CityQuro,CityQSSO])
 
   return (
     <>
+
    <CRow className="gx-3 gy-4">
   <CCol xs={12} sm={6} lg={4} xl={3}>
     <SortSales onDateChange={handleDateChange} />
+
     <CWidgetStatsA
-    style={{ minHeight: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-      chart={
-        <div style={{ padding: '0px 10px 20px', position: 'relative' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-            <div style={{ textAlign: 'left', margin: '5px' }}>
-              <div><b>Daily URO</b></div>
-            </div>
-            <div style={{ textAlign: 'right', margin: '5px' }}>
-              <span
-                style={{
-                  color: totalRevenueData.totalRevenue.dailyurogrowth < 0 ? 'red' : 'green',
-                  fontWeight: 'bold',
-                }}
-              >
-                {totalRevenueData.totalRevenue.dailyurogrowth < 0 ? '▼' : '▲'}{' '}
-                {totalRevenueData.totalRevenue.dailyurogrowth?.toFixed(2) ?? 0}%
-              </span>
-            </div>
-            <div style={{ backgroundColor: '#ccc', height: '1px', width: '100%', gridColumn: '1 / -1' }}></div>
-            <div style={{ textAlign: 'left', margin: '5px' }}>
-              <div><b>Daily SSO</b></div>
-            </div>
-            <div style={{ textAlign: 'right', margin: '5px' }}>
-              <span
-                style={{
-                  color: totalRevenueData.totalRevenue.dailyssogrowth < 0 ? 'red' : 'green',
-                  fontWeight: 'bold',
-                }}
-              >
-                {totalRevenueData.totalRevenue.dailyssogrowth < 0 ? '▼' : '▲'}{' '}
-                {totalRevenueData.totalRevenue.dailyssogrowth?.toFixed(2) ?? 0}%
-              </span>
-            </div>
-          </div>
+  style={{
+    minHeight: '175px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  }}
+  chart={
+    <div style={{ padding: '0px 20px 20px', position: 'relative', flex: 1 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+        <div style={{ textAlign: 'left', margin: '5px 0' }}>
+          <div><b>Daily URO</b></div>
         </div>
-      }
-    />
+        <div style={{ textAlign: 'right', margin: '5px 0' }}>
+          <span
+            style={{
+              color: totalRevenueData.totalRevenue.dailyurogrowth < 0 ? 'red' : 'green',
+              fontWeight: 'bold',
+            }}
+          >
+            {totalRevenueData.totalRevenue.dailyurogrowth < 0 ? '▼' : '▲'}{' '}
+            {totalRevenueData.totalRevenue.dailyurogrowth?.toFixed(2) ?? 0}%
+          </span>
+        </div>
+        <div
+          style={{
+            backgroundColor: '#ccc',
+            height: '1px',
+            width: '100%',
+            gridColumn: '1 / -1',
+          }}
+        ></div>
+        <div style={{ textAlign: 'left', margin: '5px 0' }}>
+          <div><b>Daily SSO</b></div>
+        </div>
+        <div style={{ textAlign: 'right', margin: '5px 0' }}>
+          <span
+            style={{
+              color: totalRevenueData.totalRevenue.dailyssogrowth < 0 ? 'red' : 'green',
+              fontWeight: 'bold',
+            }}
+          >
+            {totalRevenueData.totalRevenue.dailyssogrowth < 0 ? '▼' : '▲'}{' '}
+            {totalRevenueData.totalRevenue.dailyssogrowth?.toFixed(2) ?? 0}%
+          </span>
+        </div>
+      </div>
+    </div>
+  }
+/>
+
   </CCol>
 
-  <CCol xs={12} sm={6} lg={4} xl={3} > 
+  <CCol xs={12} sm={6} lg={4} xl={3}>
   <CWidgetStatsA
-  style={{ minHeight: '272px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-    title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>RGU GA</span>}
+    style={{ minHeight: '272px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+    title={
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>RGU GA</span>
+        <CDropdown variant="btn-group" style={{ marginTop: '10px' }}>
+          <CDropdownToggle color="secondary" variant="outline">
+            {CityRGU ?? 'All City'} {/* Show 'All City' when CityRGU is null */}
+          </CDropdownToggle>
+          <CDropdownMenu>
+            {/* Option for 'All City' */}
+            <CDropdownItem 
+              key="all-city" 
+              onClick={() => setCityRGU(null)} // Set CityRGU to null when "All City" is selected
+            >
+              All City
+            </CDropdownItem>
+
+            {/* List of other cities */}
+            {salesAreas.length > 0 ? (
+              salesAreas.map((city, index) => (
+                <CDropdownItem 
+                  key={index} 
+                  onClick={() => setCityRGU(city)} // Set CityRGU to the selected city
+                >
+                  {city}
+                </CDropdownItem>
+              ))
+            ) : (
+              <CDropdownItem disabled>No cities available</CDropdownItem>
+            )}
+          </CDropdownMenu>
+        </CDropdown>
+
+      </div>
+    }
     chart={
       <div style={{ padding: '5% 0', height: '100%' }}>
         <CChartBar
@@ -359,11 +472,43 @@ const Dashboard = () => {
   />
 </CCol>
 
-
 <CCol xs={12} sm={6} lg={4} xl={3}>
   <CWidgetStatsA
-  style={{ minHeight: '272px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-    title={<span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>VLR</span>}
+    style={{ minHeight: '272px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+    title={
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>VLR</span>
+        <CDropdown variant="btn-group" style={{ marginTop: '10px' }}>
+          <CDropdownToggle color="secondary"variant="outline" >
+            {CityVLR ?? 'All City'} {/* Show 'All City' when CityRGU is null */}
+          </CDropdownToggle>
+          <CDropdownMenu>
+            {/* Option for 'All City' */}
+            <CDropdownItem 
+              key="all-city" 
+              onClick={() => setCityVLR(null)} // Set CityRGU to null when "All City" is selected
+            >
+              All City
+            </CDropdownItem>
+
+            {/* List of other cities */}
+            {salesAreas.length > 0 ? (
+              salesAreas.map((city, index) => (
+                <CDropdownItem 
+                  key={index} 
+                  onClick={() => setCityVLR(city)} // Set CityRGU to the selected city
+                >
+                  {city}
+                </CDropdownItem>
+              ))
+            ) : (
+              <CDropdownItem disabled>No cities available</CDropdownItem>
+            )}
+          </CDropdownMenu>
+        </CDropdown>
+      </div>
+     
+    }
     chart={
       <div style={{ padding: '5% 0', height: '100%' }}>
         <CChartBar
@@ -391,7 +536,7 @@ const Dashboard = () => {
                 grid: { display: false },
                 ticks: {
                   font: {
-                    size: '1em', // Relative font size
+                    size: '1em',
                   },
                 },
               },
@@ -400,7 +545,7 @@ const Dashboard = () => {
                 ticks: {
                   display: false,
                   font: {
-                    size: '1em', // Relative font size
+                    size: '1em',
                   },
                 },
               },
@@ -427,9 +572,12 @@ const Dashboard = () => {
 </CCol>
 
 
+
+
+
 <CCol xs={12} sm={6} lg={4} xl={3}>
     <CWidgetStatsA
-        style={{ minHeight: '272px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+        style={{ minHeight: '308px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
         title={<span style={{ fontWeight: 'bold', fontSize: '18px' }}>Subscriber</span>}
         chart={
             <div style={{ padding: '20px', position: 'relative', height: '220px' }}>  {/* Set a fixed height */}
@@ -678,96 +826,210 @@ const Dashboard = () => {
 
 
 <CRow>
-  <CCol sm={12} md={6} xl={4} xxl={3}>
-    <CCard className="mb-4" style={{ flex: '1 1 0%', maxWidth: '100%', minWidth: '200px', paddingBottom:'11px' }}> {/* Added minWidth */}
-      <CCardBody>
-        <div style={{ display: 'flex', alignItems: 'center', padding: '10px 0px 0px 0px' }}>
-          <div style={{ width: '60%', height: '60%' }}>
-            <CChartDoughnut 
-              data={{
-                labels: [], // Empty array to remove labels
-                datasets: [{
-                  data: [
-                    totalRevenueData.totalRevenue.quromtd === null ? 0 : totalRevenueData.totalRevenue.quromtd.toFixed(2),
-                    1 - (totalRevenueData.totalRevenue.quromtd === null ? 0 : totalRevenueData.totalRevenue.quromtd.toFixed(2))
-                  ],
-                  backgroundColor: ['#FFCE56', '#FF6347'],
-                }]
-              }} 
-              options={{ 
-                maintainAspectRatio: false, 
-                cutout: '80%',  // Makes the center hollow
-                plugins: {
-                  legend: { display: false },  // Hides the legend
-                  tooltip: { enabled: false }  // Disables tooltips if unwanted
-                }
-              }} 
-            />
-            <div style={{
-              position: 'relative', 
-              top: '-85px', 
-              textAlign: 'center', 
-              fontWeight: 'bold', 
-              fontSize: '15px'
-            }}>
-              {(Math.ceil(Math.abs(totalRevenueData.totalRevenue.qurogrowth ?? 0) * 100) / 100).toFixed(2)}%
-            </div>
-          </div>
-          <div style={{ paddingLeft: '20px', fontSize: '12px' }}>
-            <h6>QURO</h6>
-            <p>{totalRevenueData.totalRevenue.quromtd === null ? 0 : totalRevenueData.totalRevenue.quromtd.toFixed(2)}<br/>Month To Date</p>
-          </div>
+<CCol sm={12} md={6} xl={4} xxl={3}>
+  <CWidgetStatsA
+    style={{ minHeight: '200px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+    title={
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>QURO</span>
+        <CDropdown variant="btn-group" style={{ marginTop: '10px' }}>
+          <CDropdownToggle color="secondary" variant="outline">
+            {CityQuro ?? 'All City'} {/* Show 'All City' when CityRGU is null */}
+          </CDropdownToggle>
+          <CDropdownMenu>
+            {/* Option for 'All City' */}
+            <CDropdownItem 
+              key="all-city" 
+              onClick={() => setCityQuro(null)} // Set CityRGU to null when "All City" is selected
+            >
+              All City
+            </CDropdownItem>
+
+            {/* List of other cities */}
+            {salesAreas.length > 0 ? (
+              salesAreas.map((city, index) => (
+                <CDropdownItem 
+                  key={index} 
+                  onClick={() => setCityQuro(city)} // Set CityRGU to the selected city
+                >
+                  {city}
+                </CDropdownItem>
+              ))
+            ) : (
+              <CDropdownItem disabled>No cities available</CDropdownItem>
+            )}
+          </CDropdownMenu>
+        </CDropdown>
+
+      </div>
+    }
+    chart={
+      <div style={{ padding: '5% 0', height: '100%' }}>
+        <CChartBar
+          data={{
+            labels: ['LMTD', 'MTD'],
+            datasets: [
+              {
+                label: 'Revenue',
+                data: [
+                  (totalRevenueData?.totalRevenue?.qurolmtd || 0).toFixed(2),
+                  (totalRevenueData?.totalRevenue?.quromtd || 0).toFixed(2),                  
+                ],
+                backgroundColor: ['#dcdcdc', '#ffcc00'],
+                barPercentage: 0.6,
+                borderRadius: 5,
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: {
+                  font: {
+                    size: '1em',
+                  },
+                },
+              },
+              y: {
+                grid: { display: false },
+                ticks: {
+                  display: false,
+                  font: {
+                    size: '1em',
+                  },
+                  
+                },
+              },
+            },
+          }}
+        />
+        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <span style={{ fontWeight: 'bold', fontSize: '1em' }}>MOM</span>
+          <span
+            style={{
+              color: totalRevenueData.totalRevenue.qurogrowth < 0 ? 'red' : 'green',
+              fontWeight: 'bold',
+              marginLeft: '5px',
+              fontSize: '1em',
+            }}
+          >
+            {totalRevenueData.totalRevenue.qurogrowth < 0 ? '▼' : '▲'}{' '}
+            {totalRevenueData.totalRevenue.qurogrowth?.toFixed(2) ?? 0}%
+          </span>
         </div>
-      </CCardBody>
-    </CCard>
+      </div>
+    }
+  />
+<br/>
+<CWidgetStatsA
+    style={{ minHeight: '200px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+    title={
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <span style={{ fontWeight: 'bold', fontSize: '1.2em' }}>QSSO</span>
+        <CDropdown variant="btn-group" style={{ marginTop: '10px' }}>
+          <CDropdownToggle color="secondary"  variant="outline">
+            {CityQSSO ?? 'All City'} {/* Show 'All City' when CityRGU is null */}
+          </CDropdownToggle>
+          <CDropdownMenu>
+            {/* Option for 'All City' */}
+            <CDropdownItem 
+              key="all-city" 
+              onClick={() => setCityQSSO(null)} // Set CityRGU to null when "All City" is selected
+            >
+              All City
+            </CDropdownItem>
+
+            {/* List of other cities */}
+            {salesAreas.length > 0 ? (
+              salesAreas.map((city, index) => (
+                <CDropdownItem 
+                  key={index} 
+                  onClick={() => setCityQSSO(city)} // Set CityRGU to the selected city
+                >
+                  {city}
+                </CDropdownItem>
+              ))
+            ) : (
+              <CDropdownItem disabled>No cities available</CDropdownItem>
+            )}
+          </CDropdownMenu>
+        </CDropdown>
+
+      </div>
+    }
+    chart={
+      <div style={{ padding: '5% 0', height: '100%' }}>
+        <CChartBar
+          data={{
+            labels: ['LMTD', 'MTD'],
+            datasets: [
+              {
+                label: 'Revenue',
+                data: [
+                  (totalRevenueData?.totalRevenue?.qssolmtd || 0).toFixed(2),
+                  (totalRevenueData?.totalRevenue?.qssomtd || 0).toFixed(2),                  
+                ],
+                backgroundColor: ['#dcdcdc', '#ffcc00'],
+                barPercentage: 0.6,
+                borderRadius: 5,
+              },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: {
+                grid: { display: false },
+                ticks: {
+                  font: {
+                    size: '1em',
+                  },
+                },
+              },
+              y: {
+                grid: { display: false },
+                ticks: {
+                  display: false,
+                  font: {
+                    size: '1em',
+                  },
+                },
+              },
+            },
+          }}
+        />
+        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+          <span style={{ fontWeight: 'bold', fontSize: '1em' }}>MOM</span>
+          <span
+            style={{
+              color: totalRevenueData.totalRevenue.qurogrowth < 0 ? 'red' : 'green',
+              fontWeight: 'bold',
+              marginLeft: '5px',
+              fontSize: '1em',
+            }}
+          >
+            {totalRevenueData.totalRevenue.qssogrowth < 0 ? '▼' : '▲'}{' '}
+            {totalRevenueData.totalRevenue.qssogrowth?.toFixed(2) ?? 0}%
+          </span>
+        </div>
+      </div>
+    }
+  />
+   <br/>
+</CCol>
 
 
-    <CCard className="mb-5" style={{ flex: '1 1 0%', maxWidth: '100%', minWidth: '200px', paddingBottom:'11px' }}> {/* Added minWidth */}
-      <CCardBody>
-        <div style={{ display: 'flex', alignItems: 'center', padding: '10px 0px 0px 0px' }}>
-          <div style={{ width: '60%', height: '100%' }}>
-            <CChartDoughnut 
-              data={{
-                labels: [], // Empty array to remove labels
-                datasets: [{
-                  data: [
-                    totalRevenueData.totalRevenue.qssomtd === null ? 0 : totalRevenueData.totalRevenue.qssomtd.toFixed(2),
-                    1 - (totalRevenueData.totalRevenue.qssomtd === null ? 0 : totalRevenueData.totalRevenue.qssomtd.toFixed(2))
-                  ],
-                  backgroundColor: ['#FFCE56', '#FF6347'],
-                }]
-              }} 
-              options={{ 
-                maintainAspectRatio: false, 
-                cutout: '80%',  // Makes the center hollow
-                plugins: {
-                  legend: { display: false },  // Hides the legend
-                  tooltip: { enabled: false }  // Disables tooltips if unwanted
-                }
-              }} 
-            />
-            <div style={{
-              position: 'relative', 
-              top: '-85px', 
-              textAlign: 'center', 
-              fontWeight: 'bold', 
-              fontSize: '15px'
-            }}>
-              {(Math.ceil(Math.abs(totalRevenueData.totalRevenue.qssogrowth ?? 0) * 100) / 100).toFixed(2)}%
-            </div>
-          </div>
-          <div style={{ paddingLeft: '20px', fontSize: '12px' }}>
-            <h6>QSSO</h6>
-            <p>{totalRevenueData.totalRevenue.qssomtd === null ? 0 : totalRevenueData.totalRevenue.qssomtd.toFixed(2)}<br/>Month To Date</p>
-          </div>
-        </div>
-      </CCardBody>
-    </CCard>
-  </CCol>
+
 
   <CCol sm={12} md={12} xl={8} xxl={9} style={{ maxWidth: '110%', flex: '1 1 auto', minWidth: '200px' }}> {/* Added minWidth */}
     <div className="revenue-container">
-      <CCard className="mb-4">
+      <CCard className="mb-4"style={{minHeight: '400px'}}>
         <CCardBody>
           <CRow>
             <CCol>
@@ -800,6 +1062,7 @@ const Dashboard = () => {
       </CCard>
     </div>
   </CCol>
+ 
 </CRow>
 
 

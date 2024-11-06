@@ -4,6 +4,7 @@ import { CChartLine } from '@coreui/react-chartjs'
 import { getStyle } from '@coreui/utils'
 
 const MainChart = ({ selectedDate }) => {
+
   const chartRef = useRef(null);
   const [chartData, setChartData] = useState({
     labels: [],
@@ -91,7 +92,7 @@ const MainChart = ({ selectedDate }) => {
     <>
       <CChartLine
         ref={chartRef}
-        style={{ height: '290px', marginTop: '40px' }}
+        style={{ height: '420px', marginTop: '40px' }}
         data={chartData} // Use the state for data
         options={{
           maintainAspectRatio: false,
