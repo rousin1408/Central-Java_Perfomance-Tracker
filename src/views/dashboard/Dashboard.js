@@ -160,132 +160,121 @@ const Dashboard = () => {
 
     const fetchData = async () => {
       try {
-        const cityUrl = import.meta.env.VITE_API_URL+'/city';
+        const cityUrl = import.meta.env.VITE_API_URL + '/city';
         const responsecity = await axios.get(cityUrl);
         const areas = responsecity.data.map((item) => item.salesArea);
-
+    
         const secondUrl = selectedDate
-        ? import.meta.env.VITE_API_URL +'/SecondColumn?created_at='+selectedDate
-        : import.meta.env.VITE_API_URL +'/SecondColumn?created_at='+formattedToday;
-        const response = await axios.get(secondUrl); // Adjust the URL if necessary
+          ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate
+          : import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday;
+        const response = await axios.get(secondUrl);
         const salesData = response.data;
-
+    
         const revenueSouthUrl = selectedDate
-        ? import.meta.env.VITE_API_URL +'/RevenueSouth?created_at='+selectedDate
-        : import.meta.env.VITE_API_URL +'/RevenueSouth?created_at='+formattedToday;
+          ? import.meta.env.VITE_API_URL + '/RevenueSouth?created_at=' + selectedDate
+          : import.meta.env.VITE_API_URL + '/RevenueSouth?created_at=' + formattedToday;
         const responsesouth = await axios.get(revenueSouthUrl);
         const salesDatasouth = responsesouth.data;
-
+    
         const revenueNorthUrl = selectedDate
-        ? import.meta.env.VITE_API_URL +'/RevenueNorth?created_at='+selectedDate
-        : import.meta.env.VITE_API_URL +'/RevenueNorth?created_at='+formattedToday;
+          ? import.meta.env.VITE_API_URL + '/RevenueNorth?created_at=' + selectedDate
+          : import.meta.env.VITE_API_URL + '/RevenueNorth?created_at=' + formattedToday;
         const responsenorth = await axios.get(revenueNorthUrl);
         const salesDatanorth = responsenorth.data;
-
+    
         const highest = selectedDate
-        ? import.meta.env.VITE_API_URL +'/highest?created_at='+selectedDate
-        : import.meta.env.VITE_API_URL +'/highest?created_at='+formattedToday;
+          ? import.meta.env.VITE_API_URL + '/highest?created_at=' + selectedDate
+          : import.meta.env.VITE_API_URL + '/highest?created_at=' + formattedToday;
         const responsehighest = await axios.get(highest);
         const highestData = responsehighest.data;
-
+    
         const lowest = selectedDate
-        ? import.meta.env.VITE_API_URL +'/lowest?created_at='+selectedDate
-        : import.meta.env.VITE_API_URL +'/lowest?created_at='+formattedToday;
+          ? import.meta.env.VITE_API_URL + '/lowest?created_at=' + selectedDate
+          : import.meta.env.VITE_API_URL + '/lowest?created_at=' + formattedToday;
         const responselowest = await axios.get(lowest);
         const lowestData = responselowest.data;
-
+    
         const responseapi = selectedDate
-        ? import.meta.env.VITE_API_URL +'/TopColumn?created_at='+selectedDate
-        : import.meta.env.VITE_API_URL +'/TopColumn?created_at='+formattedToday;
+          ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + selectedDate
+          : import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + formattedToday;
         const responses = await axios.get(responseapi);
         const salesDatas = responses.data;
-
-
-        const averageUrl = 
-        CityRGU && selectedDate 
+    
+        const averageUrl = CityRGU && selectedDate
           ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + selectedDate + '&sales_area=' + CityRGU
-          : CityRGU 
+          : CityRGU
             ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + formattedToday + '&sales_area=' + CityRGU
-            : selectedDate 
+            : selectedDate
               ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + selectedDate + '&sales_area=null'
-              : import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + formattedToday + '&sales_area=null';      
+              : import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + formattedToday + '&sales_area=null';
         const responserguga = await axios.get(averageUrl);
-        const responhasilrgu= responserguga.data;
-
-
-        const averageVLR = 
-        CityVLR && selectedDate
+        const responhasilrgu = responserguga.data;
+    
+        const averageVLR = CityVLR && selectedDate
           ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + selectedDate + '&sales_area=' + CityVLR
           : CityVLR
             ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + formattedToday + '&sales_area=' + CityVLR
             : selectedDate
               ? import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + selectedDate + '&sales_area=null'
               : import.meta.env.VITE_API_URL + '/TopColumn?created_at=' + formattedToday + '&sales_area=null';
-      
-      const responseVLR = await axios.get(averageVLR);
-      const responhasilvlr= responseVLR.data;
-
-
-
-      const quroUrl = 
-      CityQuro&& selectedDate 
-        ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=' + CityQuro
-        : CityQuro 
-          ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=' + CityQuro
-          : selectedDate 
-            ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=null'
-            : import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=null';      
-      const responsequro = await axios.get(quroUrl);
-      const responhasilquro= responsequro.data;
-
-      const qssoUrl = 
-      CityQSSO&& selectedDate 
-        ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=' + CityQSSO
-        : CityQSSO 
-          ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=' + CityQSSO
-          : selectedDate 
-            ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=null'
-            : import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=null';      
-      const responseqsso = await axios.get(qssoUrl);
-      const responhasilqsso= responseqsso.data;
-
-        // Assuming the response is structured like:
-        // { totRevLmtd: number, totRevGrowth: number }
+        const responseVLR = await axios.get(averageVLR);
+        const responhasilvlr = responseVLR.data;
+    
+        const quroUrl = CityQuro && selectedDate
+          ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=' + CityQuro
+          : CityQuro
+            ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=' + CityQuro
+            : selectedDate
+              ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=null'
+              : import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=null';
+        const responsequro = await axios.get(quroUrl);
+        const responhasilquro = responsequro.data;
+    
+        const qssoUrl = CityQSSO && selectedDate
+          ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=' + CityQSSO
+          : CityQSSO
+            ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=' + CityQSSO
+            : selectedDate
+              ? import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + selectedDate + '&sales_area=null'
+              : import.meta.env.VITE_API_URL + '/SecondColumn?created_at=' + formattedToday + '&sales_area=null';
+        const responseqsso = await axios.get(qssoUrl);
+        const responhasilqsso = responseqsso.data;
+    
         if (!Array.isArray(highestData)) {
           console.error('Expected an array, but got:', highestData);
-          return; // Early return if data is not as expected
+          return;
         }
         if (!Array.isArray(lowestData)) {
           console.error('Expected an array, but got:', lowestData);
-          return; // Early return if data is not as expected
+          return;
         }
-
+    
         const totalRevenueData = {
           totalRevenue: {
             dailyssogrowth: salesData.dailySsoGrowth,
             dailyurogrowth: salesData.dailyUroGrowth,
             mtd: salesData.totRevMtd,
-            qurogrowth:responhasilquro.quroGrowth,
-            quromtd:responhasilquro.quroMtd,
-            qurolmtd:responhasilquro.quroLmtd,
-            qssogrowth:responhasilqsso.qssoGrowth,
-            qssomtd:responhasilqsso.qssoMtd,
-            qssolmtd:responhasilqsso.qssoLmtd,
-            moboMtd: salesData.moboMtd, // Replace with the actual field names from the backend
+            qurogrowth: responhasilquro.quroGrowth,
+            quromtd: responhasilquro.quroMtd,
+            qurolmtd: responhasilquro.quroLmtd,
+            qssogrowth: responhasilqsso.qssoGrowth,
+            qssomtd: responhasilqsso.qssoMtd,
+            qssolmtd: responhasilqsso.qssoLmtd,
+            moboMtd: salesData.moboMtd,
             dataRevMtd: salesData.dataRevMtd,
             vasRevMtd: salesData.vasRevMtd,
             moboTradeMtd: salesData.moboTradeMtd,
             moboNonTradeMtd: salesData.moboNonTradeMtd,
             orgRevMtd: salesData.orgRevMtd,
-            salesDatanorth:salesDatanorth.totRevMtd,
-            salesDatasouth:salesDatasouth.totRevMtd,
-            tradeSupplyMtd:salesData.tradeSupplyMtd,
-            tradeCvmRevMtd:salesData.tradeCvmRevMtd,
-            tradeSpMtd:salesData.tradeSpMtd,
-            tradeRebuyMtd:salesData.tradeRebuyMtd,
+            salesDatanorth: salesDatanorth.totRevMtd,
+            salesDatasouth: salesDatasouth.totRevMtd,
+            tradeSupplyMtd: salesData.tradeSupplyMtd,
+            tradeCvmRevMtd: salesData.tradeCvmRevMtd,
+            tradeSpMtd: salesData.tradeSpMtd,
+            tradeRebuyMtd: salesData.tradeRebuyMtd,
             labelshighest: highestData.map(item => item.salesArea),
             revenueshighest: highestData.map(item => item.averageRevenue),
-            labelslowest : lowestData.map(item => item.salesArea),
+            labelslowest: lowestData.map(item => item.salesArea),
             revenueslowest: lowestData.map(item => item.averageRevenue),
             lmtd: salesDatas.totRevLmtd,
             vlrlmtd: responhasilvlr.vlrLmtd,
@@ -293,22 +282,24 @@ const Dashboard = () => {
             rgu90lmtd: responhasilrgu.rgu90Lmtd,
             rgu90mtd: responhasilrgu.rgu90Mtd,
             net30: salesDatas.netAdd30d,
-            net90:salesDatas.netAdd90d,
-            churn30:salesDatas.grossMtdChurn30d,
-            churn90:salesDatas.grossMtdChurn90d,
-            totRevGrowth:salesDatas.totRevGrowth,
-            rgu90Growth:responhasilrgu.rgu90Growth,
-            vltGrowth:responhasilvlr.vlrGrowth,
+            net90: salesDatas.netAdd90d,
+            churn30: salesDatas.grossMtdChurn30d,
+            churn90: salesDatas.grossMtdChurn90d,
+            totRevGrowth: salesDatas.totRevGrowth,
+            rgu90Growth: responhasilrgu.rgu90Growth,
+            vltGrowth: responhasilvlr.vlrGrowth,
           },
         };
-console.log(responhasilrgu.rgu90Growth);
+    
+        console.log(responhasilrgu.rgu90Growth);
         setSalesAreas(areas);
         setTotalRevenueData(totalRevenueData);
-        
+    
       } catch (error) {
         console.error('Error fetching sales data:', error);
       }
     };
+    
 
     fetchData();
   },[selectedDate,CityVLR, CityRGU,CityQuro,CityQSSO])
