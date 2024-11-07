@@ -37,8 +37,8 @@ const ChatBot = () => {
     try {
       setLoading(true);
       const response = await axios.post(import.meta.env.VITE_API_AUTOBOT + '/run_query/', payload);
-      const botReply = response.data.response.output;
-      const userMessage = response.data.response.input;
+      const botReply = response.data.response;
+      const userMessage = userInput;
 
       setChatHistory((prev) => [...prev, { user: userMessage, bot: botReply, timestamp: new Date() }]);
       setUserInput('');
@@ -47,8 +47,8 @@ const ChatBot = () => {
 
       try {
         const response = await axios.post(import.meta.env.VITE_API_AUTOBOT + '/run_query/', payload);
-        const botReply = response.data.response.output;
-        const userMessage = response.data.response.input;
+        const botReply = response.data.response
+        const userMessage = userInput;
 
         setChatHistory((prev) => [...prev, { user: userMessage, bot: botReply, timestamp: new Date() }]);
         setUserInput('');
